@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login</title>
+<style>
+:root {
+    --bg-gradient: linear-gradient(110deg, #1A214B 0%, #dfe1ea 100%);
+    --card-bg: #ffffff;
+    --card-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    --text-primary: #000000;
+    --text-secondary: #555;
+    --input-bg: #fafafa;
+    --input-border: #ccc;
+    --input-focus: #1b234b;
+    --btn-bg: #5d6fd2;
+    --btn-hover: #4b5ecc;
+    --link-color: #4b8acb;
+}
+
+body.dark-mode {
+    --bg-gradient: linear-gradient(110deg, #0d0d0d 0%, #1a1a1a 100%);
+    --card-bg: #2a2a2a;
+    --card-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    --text-primary: #ffffff;
+    --text-secondary: #d0d0d0;
+    --input-bg: #333333;
+    --input-border: #444444;
+    --input-focus: #5d6fd2;
+    --btn-bg: #5d6fd2;
+    --btn-hover: #4b5ecc;
+    --link-color: #7ba3d4;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Poppins", sans-serif;
+    background: var(--bg-gradient);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    color: var(--text-primary);
+}
+.card {
+    width: 420px;
+    background: var(--card-bg);
+    margin-top: 12rem;
+    padding: 40px;
+    border-radius: 22px;
+    box-shadow: var(--card-shadow);
+    text-align: center;
+    color: var(--text-primary);
+}
+.card h2 { 
+    font-size: 24px; 
+    margin-bottom: 10px; 
+}
+.card p.sub-topic {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 25px;
+}
+.input-box { 
+    width: 100%; 
+    margin-bottom: 18px; 
+    display: flex;
+    justify-content: center;
+}
+.input-box input {
+    width: 80%;
+    padding: 12px 15px;
+    border-radius: 10px;
+    border: 1px solid var(--input-border);
+    background: var(--input-bg);
+    color: var(--text-primary);
+    font-size: 14px;
+    outline: none;
+}
+.input-box input:focus {
+    border-color: var(--input-focus);
+    box-shadow: 0 0 5px rgba(93,111,210,0.3);
+}
+.btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--btn-bg);
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    color: white;
+    cursor: pointer;
+    margin-top: 5px;
+}
+.btn:hover { background: var(--btn-hover); }
+.login-text { margin-top: 12px; font-size: 13px; color: var(--text-secondary); }
+.login-text a { color: var(--link-color); text-decoration: none; font-weight: 600; }
+.login-text a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<div class="card">
+    <h2>LOGIN</h2>
+    <p class="sub-topic">Access your account using your Student ID and password</p>
+
+    <div class="input-box">
+        <input type="text" id="studentId" placeholder="Enter your 6-digit Student ID" maxlength="6">
+    </div>
+    <div class="input-box">
+        <input type="password" id="password" placeholder="Enter your password">
+    </div>
+
+    <button class="btn" onclick="loginForm()">LOGIN</button>
+
+    <div class="login-text">
+        Don't have an account? <a href="signup.html">Sign Up</a>
+    </div>
+</div>
+
+<script>
+function loginForm() {
+    const studentId = document.getElementById("studentId").value;
+    const password = document.getElementById("password").value;
+
+    if(!studentId || !password){
+        alert("Please complete all fields.");
+        return;
+    }
+
+    // Retrieve all registered students from localStorage
+    const students = JSON.parse(localStorage.getItem("student_users") || "[]");
+    
+    // Find matching student account
+    const foundStudent = students.find(s => s.studentId === studentId && s.password === password);
+    
+    if(foundStudent) {
+        // Create session data for the logged-in student
+        const now = new Date().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' });
+        const sessionData = { ...foundStudent };
+        sessionData.lastLogin = now;
+        sessionData.activityHistory = sessionData.activityHistory || [];
+        sessionData.activityHistory.unshift(`Logged in on ${now}`);
+        sessionData.activityHistory = sessionData.activityHistory.slice(0, 5);
+        
+        // Save session data
+        localStorage.setItem("user", JSON.stringify(sessionData));
+        
+        alert("Login successful!");
+        window.location.href = "student-dashboard.html"; // Redirect to dashboard
+    } else {
+        alert("Invalid Student ID or password.");
+    }
+}
+
+// Initialize dark mode if enabled in localStorage
+window.addEventListener('DOMContentLoaded', () => {
+  try {
+    const darkModeEnabled = localStorage.getItem('pref-darkMode') === '1';
+    if (darkModeEnabled) {
+      document.body.classList.add('dark-mode');
+    }
+
+    // Ensure student_users array exists in localStorage
+    if (!localStorage.getItem('student_users')) {
+      localStorage.setItem('student_users', JSON.stringify([]));
+    }
+  } catch(e) {}
+});
+</script>
+
+</body>
+</html>

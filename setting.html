@@ -1,0 +1,656 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>IDEase Portal — Settings</title>
+  <!-- FONT AWESOME ICONS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root{
+      --sidebar-width: 280px;
+      --navy: #0f2340;
+      --muted: #6b7280;
+      --card-bg: #ffffff;
+      --accent: #1e56d6;
+      --bg: #f5f7fb;
+      --text-primary: #000000;
+      --text-secondary: #6b7280;
+      --input-bg: #fbfdff;
+      --input-border: #e6eefc;
+      --radius: 14px;
+      --shadow: 0 6px 18px rgba(11,18,35,0.06);
+      --max-main-width: 920px;
+      --gap: 20px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", Arial;
+    }
+
+    body.dark-mode {
+      --card-bg: #2a2a2a;
+      --bg: #1a1a1a;
+      --text-primary: #ffffff;
+      --text-secondary: #aaaaaa;
+      --input-bg: #333333;
+      --input-border: #444444;
+      --muted: #aaaaaa;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Inter", Arial, sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+      color: var(--text-primary);
+    }
+
+    /* ================= SIDEBAR ================= */
+    .sidebar {
+      width: 220px;
+      height: 100vh;
+      background: #0f2340;
+      color: white;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      border-radius: 0 20px 20px 0;
+      box-shadow: 4px 0 20px rgba(0,0,0,0.25);
+    }
+
+    .logo {
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    .logo h2 {
+      font-size: 24px;
+      margin: 10px 0 0;
+    }
+
+    .sidebar .logo i {
+      font-size: 34px;
+      color: #fff;
+    }
+
+    .logo span,
+    .logo p {
+      font-size: 12px;
+      color: #b9c6e0;
+    }
+
+    .menu {
+      margin-top: 20px;
+      flex-grow: 1;
+    }
+
+    .menu-item {
+      padding: 12px 15px;
+      margin-bottom: 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #d9e3f5;
+      text-decoration: none;
+    }
+
+    .menu-item:hover,
+    .menu-item.active {
+      background: rgba(255,255,255,0.1);
+    }
+
+    .profile-card {
+      background: #12294d;
+      padding: 15px;
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: auto;
+    }
+
+    .profile-card img {
+      width: 50px;
+      height: 35px;
+      border-radius: 50%;
+    }
+
+    .profile-info p {
+      font-size: 12px;
+      margin: 0;
+      opacity: 0.85;
+    }
+
+    .student-tag {
+      background: #1f3a66;
+      padding: 3px 7px;
+      border-radius: 6px;
+      font-size: 10px;
+      display: inline-block;
+      margin-top: 3px;
+    }
+
+    /* Main content area */
+    .main {
+      flex: 1;
+      min-height: 100vh;
+      padding: 28px 32px;
+      overflow-y: auto;
+      background: var(--bg);
+      position: relative;
+      color: var(--text-primary);
+    }
+
+    .header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .page-title {
+      font-size: 29px;
+      font-weight: 700;
+    }
+
+    .header-controls {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .icon-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: white;
+      border: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+    }
+
+    .container {
+      width: 100%;
+      max-width: none;
+      margin: 0;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+      margin-top: 30px;
+    }
+
+    .card h3 {
+      margin: 0 0 12px 0;
+      font-size: 15px;
+    }
+
+    .card .muted {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 0;
+      background: var(--accent);
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn.ghost {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid #eef2ff;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(2,1fr);
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .form-row .full {
+      grid-column: 1/-1;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 6px;
+      color: var(--text-primary);
+    }
+
+    input[type="text"], input[type="email"], input[type="tel"], input[type="date"], select, input[type="password"] {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--input-border);
+      background: var(--input-bg);
+      color: var(--text-primary);
+      box-sizing: border-box;
+      font-size: 14px;
+    }
+
+    input[disabled] {
+      background: #f3f4f6;
+      color: #9aa4b2;
+    }
+
+    .prefs-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .pref-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--input-border);
+    }
+
+    .pref-left {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .small {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .switch {
+      --w:46px;
+      --h:26px;
+      width: var(--w);
+      height: var(--h);
+      border-radius: 999px;
+      background: #e6eefc;
+      position: relative;
+      cursor: pointer;
+      flex-shrink: 0;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.5);
+    }
+
+    .switch .knob {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: white;
+      box-shadow: 0 2px 6px rgba(16,24,40,0.12);
+      transition: all .18s ease;
+    }
+
+    .switch.on {
+      background: linear-gradient(90deg,var(--accent), #3ab0ff);
+    }
+
+    .switch.on .knob {
+      left: calc(var(--w) - 3px - 20px);
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    @media (max-width:1050px){
+      .two-col{grid-template-columns:1fr}
+      .form-row{grid-template-columns:1fr}
+      .main{padding:20px}
+    }
+    @media (max-width:768px){
+      body{height:auto}
+      .sidebar{width:100%;height:auto;border-radius:0;flex-direction:row;padding:10px;position:sticky;top:0;z-index:100}
+      .logo{margin-bottom:0}
+      .logo h2{font-size:18px}
+      .menu{flex-direction:row;margin-top:0;gap:5px}
+      .menu-item{padding:8px 12px;font-size:12px;margin-bottom:0}
+      .main{padding:15px}
+      .two-col{grid-template-columns:1fr}
+      .form-row{grid-template-columns:1fr}
+      .prefs-list{gap:12px}
+    }
+    @media (max-width:600px){
+      .sidebar{flex-direction:column;height:auto;padding:10px;border-radius:0}
+      .logo{margin-bottom:15px;display:flex;align-items:center;gap:10px}
+      .logo h2{font-size:16px;margin:0}
+      .logo i{font-size:24px}
+      .menu{flex-direction:column;gap:0}
+      .menu-item{padding:10px 12px;font-size:11px}
+      .main{padding:12px}
+      .page-title{font-size:18px}
+      .container{padding:0}
+      input,select,textarea{font-size:16px}
+      .form-label{font-size:12px}
+      .section-title{font-size:16px}
+      .pref-item{padding:12px;flex-direction:column;align-items:flex-start;gap:8px}
+      .pref-item label{width:100%;font-size:12px}
+      .switch{min-width:45px}
+      .save-wrap{flex-direction:column}
+      .save-btn,.cancel-btn{width:100%;font-size:12px}
+      .modal-content{width:90%;padding:20px}
+      .modal-btn{padding:10px 15px;font-size:12px;width:100%}
+    }
+
+    .save-wrap {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 8px;
+    }
+
+    .save-btn {
+      background: var(--accent);
+      color: white;
+      padding: 12px 18px;
+      border-radius: 10px;
+      border: 0;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 8px 22px rgba(30,86,214,0.18)
+    }
+
+    .field-note {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      animation: fadeIn 0.2s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .modal.show {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 32px;
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+      max-width: 450px;
+      width: 90%;
+      animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      font-size: 20px;
+      color: #0f2340;
+    }
+
+    .modal-header i {
+      font-size: 24px;
+      color: #1e56d6;
+    }
+
+    .modal-body {
+      margin: 20px 0;
+      color: #555;
+      line-height: 1.6;
+    }
+
+    .modal-footer {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+      margin-top: 24px;
+    }
+
+    .modal-btn {
+      padding: 10px 16px;
+      border-radius: 8px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .modal-btn.primary {
+      background: #1e56d6;
+      color: white;
+    }
+
+    .modal-btn.primary:hover {
+      background: #1544b8;
+    }
+
+    .modal-btn.secondary {
+      background: #e6eefc;
+      color: #0f2340;
+    }
+
+    .modal-btn.secondary:hover {
+      background: #d4e5f7;
+    }
+
+  </style>
+</head>
+<body>
+<div class="sidebar">
+    <!-- LOGO -->
+    <div class="logo">
+        <i class="fa-solid fa-graduation-cap"></i>
+        <h2>IDEease Portal</h2>
+        <p>Student Services</p>
+    </div>
+
+    <!-- MENU -->
+    <div class="menu">
+        <a href="student-dashboard.html" class="menu-item">
+            <i class="fa-solid fa-house"></i> Dashboard
+        </a>
+        <a href="help center.html" class="menu-item">
+            <i class="fa-solid fa-headset"></i> Help & Support
+        </a>
+        <a href="profile.html" class="menu-item">
+            <i class="fa-solid fa-user"></i> Profile
+        </a>
+        <a href="setting.html" class="menu-item active">
+            <i class="fa-solid fa-gear"></i> Settings
+        </a>
+    </div>
+</div>
+
+<main class="main">
+  <div class="container">
+    <div class="header-row">
+      <div class="page-title">Settings</div>
+      <div class="header-controls"></div>
+    </div>
+
+    <!-- Two-column area -->
+    <div class="two-col">
+      <!-- Left column: Notification & Privacy -->
+      <div style="display:flex;flex-direction:column;gap:20px">
+
+        <section class="card" aria-labelledby="notif-heading">
+          <h3 id="notif-heading">Notification Preferences</h3>
+          <div class="muted">Choose how you want to receive notifications</div>
+          <div style="margin-top:12px" class="prefs-list" id="notificationsList">
+            <div class="pref-item">
+              <div class="pref-left">
+                <div style="font-weight:700">Email Notifications</div>
+                <div class="small">Receive updates and announcements via email</div>
+              </div>
+              <div><div class="switch on" data-key="email" role="switch" aria-checked="true" tabindex="0"><div class="knob"></div></div></div>
+            </div>
+            <div class="pref-item">
+              <div class="pref-left">
+                <div style="font-weight:700">Push Notifications</div>
+                <div class="small">Get instant alerts on your device</div>
+              </div>
+              <div><div class="switch on" data-key="push" role="switch" aria-checked="true" tabindex="0"><div class="knob"></div></div></div>
+            </div>
+            <div class="pref-item">
+              <div class="pref-left">
+                <div style="font-weight:700">Event Reminders</div>
+                <div class="small">Get reminders for upcoming classes and events</div>
+              </div>
+              <div><div class="switch on" data-key="events" role="switch" aria-checked="true" tabindex="0"><div class="knob"></div></div></div>
+            </div>
+            <div class="pref-item">
+              <div class="pref-left">
+                <div style="font-weight:700">Weekly Digest</div>
+                <div class="small">Receive a weekly summary of your activities</div>
+              </div>
+              <div><div class="switch on" data-key="weekly" role="switch" aria-checked="true" tabindex="0"><div class="knob"></div></div></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="card" aria-labelledby="privacy-heading">
+          <h3 id="privacy-heading">Privacy Settings</h3>
+          <div class="muted">Control who can see your information</div>
+          <div style="margin-top:12px;display:flex;flex-direction:column;gap:10px">
+            <div class="pref-item">
+              <div class="pref-left">
+                <div style="font-weight:700">Profile Visibility</div>
+                <div class="small">Make your profile visible to other students</div>
+              </div>
+              <div><div class="switch on" data-key="visibility" role="switch" aria-checked="true" tabindex="0"><div class="knob"></div></div></div>
+            </div>
+            <div class="pref-item">
+              <div class="pref-left">
+                <div style="font-weight:700">Show Email Address</div>
+                <div class="small">Display your email on your public profile</div>
+              </div>
+              <div><div class="switch" data-key="showEmail" role="switch" aria-checked="false" tabindex="0"><div class="knob"></div></div></div>
+            </div>
+            <div class="pref-item">
+              <div class="pref-left">
+                <div style="font-weight:700">Show Phone Number</div>
+                <div class="small">Display your phone number on your public profile</div>
+              </div>
+              <div><div class="switch" data-key="showPhone" role="switch" aria-checked="false" tabindex="0"><div class="knob"></div></div></div>
+            </div>
+            <div class="pref-item">
+              <div class="pref-left">
+                <div style="font-weight:700">Activity Status</div>
+                <div class="small">Show when you're online or active</div>
+              </div>
+              <div><div class="switch on" data-key="activity" role="switch" aria-checked="true" tabindex="0"><div class="knob"></div></div></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="card" aria-labelledby="display-heading">
+          <h3 id="display-heading">Display</h3>
+          <div class="muted">Customize your display preferences</div>
+          <div style="margin-top:12px;display:flex;flex-direction:column;gap:10px">
+            <div class="pref-item">
+              <div class="pref-left">
+                <div style="font-weight:700"><i class="fa-solid fa-moon" style="margin-right:8px;color:#1e56d6"></i>Dark Mode</div>
+                <div class="small">Use dark theme for reduced eye strain</div>
+              </div>
+              <div><div class="switch" data-key="darkMode" role="switch" aria-checked="false" tabindex="0"><div class="knob"></div></div></div>
+            </div>
+          </div>
+        </section>
+
+    <div style="height:40px"></div>
+  </div>
+</main>
+
+<script>
+  // Switch toggles
+  const switches = document.querySelectorAll('.switch');
+  switches.forEach(s => {
+    s.addEventListener('click', () => {
+      toggleSwitch(s);
+    });
+    s.addEventListener('keydown', (ev) => { if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); toggleSwitch(s); } });
+  });
+
+  function toggleSwitch(el){
+    const isOn = el.classList.toggle('on');
+    el.setAttribute('aria-checked', isOn ? 'true' : 'false');
+    const key = el.dataset.key;
+    try { localStorage.setItem('pref-' + key, isOn ? '1' : '0'); } catch(e) {}
+    
+    // Handle dark mode toggle
+    if (key === 'darkMode') {
+      if (isOn) {
+        document.body.classList.add('dark-mode');
+      } else {
+        document.body.classList.remove('dark-mode');
+      }
+    }
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    switches.forEach(s => {
+      const key = s.dataset.key;
+      try {
+        const v = localStorage.getItem('pref-' + key);
+        if (v === '0') { s.classList.remove('on'); s.setAttribute('aria-checked','false'); }
+        if (v === '1') { s.classList.add('on'); s.setAttribute('aria-checked','true'); }
+        
+        // Apply dark mode on page load if it was previously enabled
+        if (key === 'darkMode' && v === '1') {
+          document.body.classList.add('dark-mode');
+        }
+      } catch(e){}
+    });
+  });
+
+
+</script>
+</body>
+</html>

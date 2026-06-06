@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Submit Request</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+</head>
+<body>
+<div class="sidebar">
+    <div class="logo">
+        <i class="fa-solid fa-graduation-cap"></i>
+        <h2>IDEease Portal</h2>
+        <p>Student Services</p>
+    </div>
+
+    <div class="menu">
+        <a href="student-dashboard.html">
+            <div class="menu-item">
+                <i class="fa-solid fa-house"></i>
+                Dashboard
+            </div>
+        </a>
+        <a href="help center.html">
+            <div class="menu-item">
+                <i class="fa-solid fa-headset"></i>
+                Help & Support
+            </div>
+        </a>
+        <a href="settings.html">
+            <div class="menu-item">
+                <i class="fa-solid fa-gear"></i>
+                Settings
+            </div>
+        </a>
+    </div>
+
+</div>
+
+<div class="main1">
+    <div class="header1">
+        <div>
+            <h1>Submit Request</h1>
+            <p>Complete the form and upload all required files to proceed with your ID request.</p>
+        </div>
+        <div class="header-right1">
+            <i class="fa-regular fa-bell"></i>
+        </div>
+    </div>
+<form id="requestForm">
+<div class="stats-section1">
+    <div class="stat-card1">
+        <h3><i class="fa-solid fa-user"></i> Personal Information</h3>
+        <div class="form-grid1">
+
+            <div>
+                <label>Full Name</label>
+                <input type="text" placeholder="Enter your full name" required/>
+            </div>
+
+            <div>
+                <label>Student ID Number</label>
+                <input type="text" placeholder="Enter your student ID" required/>
+            </div>
+            <div>
+                <label>Department / College</label>
+                <select id="course-category" required>
+                    <option value="">Select your college</option>
+                    <option value="cafnr">College of Agriculture, Fisheries and Natural Resources</option>
+                    <option value="cac">College of Arts and Communication</option>
+                    <option value="cba">College of Business Administration</option>
+                    <option value="coed">College of Education</option>
+                    <option value="coe">College of Engineering</option>
+                    <option value="col">College of Law</option>
+                    <option value="cnahs">College of Nursing and Allied Health Sciences</option>
+                    <option value="cos">College of Science</option>
+                    <option value="cvm">College of Veterinary Medicine</option>
+                </select>
+            </div>
+            <div>
+                <label>Program / Degree</label>
+                <select id="sub-course" required disabled>
+                    <option value="">Select program</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Year Level</label>
+                <select required>
+                    <option value="">Select year level</option>
+                    <option value="1st_year">1st year</option>
+                    <option value="2nd_year">2nd year</option>
+                    <option value="3rd_year">3rd year</option>
+                    <option value="4th_year">4th year</option>
+                </select>
+            </div>
+
+            <div style="grid-column: span 2;">
+                <label>Reason for Requesting an ID</label>
+                <textarea placeholder="Please explain why you need a new ID card..." required></textarea>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="upload-grid1">
+    <div class="upload-box1" id="photoBox">
+        Click to upload photo<br>
+        <small>JPG, PNG (Max 5MB)</small>
+        <input type="file" id="photoUpload" accept=".jpg,.jpeg,.png" hidden>
+        <button type="button" class="remove-btn" style="display:none;">&times;</button>
+    </div>
+    <div class="upload-box1" id="docBox">
+        Click to upload your cor according your library id.<br>
+        <small>PDF, JPG, PNG (Max 10MB)</small>
+        <input type="file" id="docUpload" accept=".pdf,.jpg,.jpeg,.png" hidden>
+        <button type="button" class="remove-btn" style="display:none;">&times;</button>
+    </div>
+    <div class="upload-box1" id="signBox">
+        Click to upload signature<br>
+        <small>PNG recommended (Max 2MB)</small>
+        <input type="file" id="signUpload" accept=".png" hidden>
+        <button type="button" class="remove-btn" style="display:none;">&times;</button>
+    </div>
+</div>
+<div class="stats-section">
+    <div class="stat-card" style="display:flex; justify-content:flex-end; gap:12px;">
+        <button class="btn cancel">Cancel</button>
+        <button type="submit" class="btn submit">Submit Request</button>
+
+    </div>
+</div>
+</div>
+</form>
+<script>
+// Role-based access control
+const BACKEND_BASE_URL = 'http://localhost:3000';
+
+function getCurrentUser() {
+    try {
+        const user = JSON.parse(localStorage.getItem('user')) || {};
+        return user;
+    } catch (e) {
+        return {};
+    }
+}
+
+function isAdmin() {
+    const user = getCurrentUser();
+    return user.role === 'admin' || user.accountType === 'admin';
+}
+
+// Initialize - restrict admins and auto-fill student data
+window.addEventListener('DOMContentLoaded', () => {
+    const user = getCurrentUser();
+    const admin = isAdmin();
+
+    if (admin) {
+        // Admins cannot submit requests; redirect or show message
+        document.getElementById('requestForm').style.display = 'none';
+        const mainDiv = document.querySelector('.main1');
+        const msg = document.createElement('div');
+        msg.style.cssText = 'background:#fee;color:#c33;padding:20px;border-radius:8px;margin-top:20px;text-align:center';
+        msg.innerHTML = '<strong>Access Denied:</strong> Admins cannot submit requests. Please access the History page to manage student requests.';
+        mainDiv.appendChild(msg);
+        return;
+    }
+
+    // Auto-fill personal info from user profile
+    if (user.firstName || user.lastName) {
+        const nameInput = document.querySelector('input[placeholder="Enter your full name"]');
+        if (nameInput) {
+            nameInput.value = [user.firstName, user.lastName].filter(Boolean).join(' ');
+        }
+    }
+    if (user.studentId) {
+        const idInput = document.querySelector('input[placeholder="Enter your student ID"]');
+        if (idInput) {
+            idInput.value = user.studentId;
+        }
+    }
+    if (user.dept) {
+        const deptSelect = document.getElementById('course-category');
+        if (deptSelect) {
+            deptSelect.value = user.dept;
+            deptSelect.dispatchEvent(new Event('change'));
+        }
+    }
+    if (user.program) {
+        setTimeout(() => {
+            const progSelect = document.getElementById('sub-course');
+            if (progSelect) {
+                progSelect.value = user.program;
+            }
+        }, 100);
+    }
+});
+
+document.querySelectorAll('.upload-box1').forEach(box => {
+    const input = box.querySelector('input[type="file"]');
+    const removeBtn = box.querySelector('.remove-btn');
+
+    // Click sa box → buksan ang file picker
+    box.addEventListener('click', () => {
+        input.click();
+    });
+
+    // Kapag pumili ng file → ipakita filename at X button
+    input.addEventListener('change', () => {
+        if (input.files.length > 0) {
+            box.innerHTML = `
+                <strong>${input.files[0].name}</strong><br>
+                <small>File selected</small>
+            `;
+            box.appendChild(input);
+            box.appendChild(removeBtn);
+            removeBtn.style.display = 'inline-block';
+        }
+    });
+
+    // X button → i-clear ang file
+    removeBtn.addEventListener('click', (e) => {
+        e.stopPropagation(); // para hindi ma-trigger ulit ang file picker
+        input.value = '';
+        removeBtn.style.display = 'none';
+        box.innerHTML = `
+            Click to upload ${box.id === 'photoBox' ? 'picture' : box.id === 'docBox' ? 'documents' : 'signature'}<br>
+            <small>${box.querySelector('small') ? box.querySelector('small').textContent : ''}</small>
+        `;
+        box.appendChild(input);
+        box.appendChild(removeBtn);
+    });
+});
+
+    // Kunin ang Cancel button at form grid
+    const cancelBtn = document.querySelector('.btn.cancel');
+    const formGrid = document.querySelector('.form-grid1');
+
+    cancelBtn.addEventListener('click', () => {
+        // I-reset lahat ng input, select, at textarea sa loob ng form
+        formGrid.querySelectorAll('input, select, textarea').forEach(el => {
+            if(el.tagName.toLowerCase() === 'select') {
+                el.selectedIndex = 0; // ibalik sa unang option
+                // Kung may disabled select (like sub-course), i-disable din
+                if(el.id === 'sub-course') el.disabled = true;
+            } else {
+                el.value = '';
+            }
+        });
+
+        // reset upload boxes safely
+        document.querySelectorAll('.upload-box1').forEach(box => {
+            location.reload(); // safe reset (no DOM corruption)
+        });
+    });
+
+/* =========================
+   Department → Program logic
+========================= */
+const categorySelect = document.getElementById("course-category");
+const subCourseSelect = document.getElementById("sub-course");
+
+const courseMap = {
+    cafnr: {
+        programs: [
+            "Bachelor of Science in Agribusiness",
+            "Bachelor of Science in Agriculture",
+            "Bachelor of Science in Fisheries",
+            "Bachelor of Science in Forestry"
+        ]
+    },
+    cac: {
+        programs: [
+            "Bachelor of Arts in English Language Studies",
+            "Bachelor of Arts in Literature and Cultural Studies",
+            "Bachelor of Arts major in Political Science",
+            "Bachelor of Arts major in Public Administration",
+            "Bachelor of Arts major in Sociology",
+            "Bachelor of Science in Community Development",
+            "Bachelor of Science in Criminology",
+            "Bachelor of Science in Development Communication"
+        ]
+    },
+    cba: {
+        programs: [
+            "Bachelor of Science in Accountancy",
+            "Bachelor of Science in Business Administration",
+            "Bachelor of Science in Business Economics",
+            "Bachelor of Science in Entrepreneurship",
+            "Bachelor of Science in Hospitality Management"
+        ]
+    },
+    coe: {
+        programs: [
+            "Bachelor of Engineering Technology",
+            "Bachelor of Science in Agricultural and Biosystems Engineering",
+            "Bachelor of Science in Civil Engineering",
+            "Bachelor of Science in Electrical Engineering",
+            "Bachelor of Science in Mechanical Engineering"
+        ]
+    },
+    col: {
+        programs: ["Bachelor of Laws"]
+    },
+    coed: {
+        programs: [
+            "Bachelor of Elementary Education",
+            "Bachelor of Elementary Technology and Livelihood Education",
+            "Bachelor of Secondary Education"
+        ]
+    },
+    cnahs: {
+        programs: [
+            "Bachelor of Science in Nursing",
+            "Bachelor of Science in Radiologic Technology"
+        ]
+    },
+    cos: {
+        programs: [
+            "Bachelor of Science in Biology",
+            "Bachelor of Science in Chemistry",
+            "Bachelor of Science in Environmental Science",
+            "Bachelor of Science in Information Technology",
+            "Bachelor of Science in Marine Biology",
+            "Bachelor of Science in Mathematics"
+        ]
+    },
+    cvm: {
+        programs: [
+            "Bachelor of Science in Meat Technology",
+            "Doctor of Veterinary Medicine"
+        ]
+    }
+};
+
+categorySelect.addEventListener("change", function () {
+    const selected = this.value;
+
+    subCourseSelect.innerHTML = '<option value="">Select program</option>';
+    subCourseSelect.disabled = true;
+
+    if (courseMap[selected]) {
+        courseMap[selected].programs.forEach((program) => {
+            const option = document.createElement("option");
+            option.value = program.toLowerCase().replace(/\s+/g, "_");
+            option.textContent = program;
+            subCourseSelect.appendChild(option);
+        });
+        subCourseSelect.disabled = false;
+    }
+});
+
+/* =========================
+   SUBMIT HANDLER (UPDATED)
+========================= */
+document.getElementById("requestForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    // 1️⃣ CHECK TEXT / SELECT / TEXTAREA
+    const requiredFields = this.querySelectorAll(
+        "input[type='text'], select, textarea"
+    );
+
+    for (let field of requiredFields) {
+        if (!field.value.trim()) {
+            alert("Please complete all required fields before submitting.");
+            field.focus();
+            return;
+        }
+    }
+
+    // 2️⃣ CHECK FILE UPLOADS
+    const photo = document.getElementById("photoUpload");
+    const doc = document.getElementById("docUpload");
+    const sign = document.getElementById("signUpload");
+
+    if (!photo.files.length || !doc.files.length || !sign.files.length) {
+        alert("Please upload all required files before submitting.");
+        return;
+    }
+
+    // =========================
+    // ADDED: REQUEST ID + STATUS + STUDENT ASSOCIATION + FULL CREDENTIALS + FILES
+    // =========================
+    const user = getCurrentUser();
+    const requestId = "REQ-" + Date.now();
+    const nameInput = this.querySelector('input[placeholder="Enter your full name"]');
+    const fullName = nameInput?.value.trim() || [user.firstName, user.lastName].filter(Boolean).join(' ') || 'Student';
+    const requestType = this.querySelector('textarea')?.value || 'ID Request';
+    
+    // Capture all form fields
+    const studentIdInput = this.querySelector('input[placeholder="Enter your student ID"]');
+    const deptSelect = document.getElementById("course-category");
+    const progSelect = document.getElementById("sub-course");
+    const yearSelect = this.querySelectorAll('select')[2]; // Year level select
+    const reasonTextarea = this.querySelector('textarea');
+    
+    const requests = getAllRequests();
+    
+    // Helper function to convert file to base64
+    function fileToBase64(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        });
+    }
+    
+    // Convert files to base64 before storing
+    Promise.all([
+        fileToBase64(photo.files[0]),
+        fileToBase64(doc.files[0]),
+        fileToBase64(sign.files[0])
+    ]).then(([photoBase64, docBase64, signBase64]) => {
+        const newRequest = {
+            id: requestId,
+            type: requestType,
+            date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' }),
+            status: 'pending',
+            studentId: user.studentId,
+            studentName: fullName,
+            fullName,
+            submittedAt: new Date().toISOString(),
+            // Store all credentials/details
+            credentials: {
+                fullName: nameInput?.value.trim() || '',
+                studentId: studentIdInput?.value.trim() || '',
+                department: deptSelect?.options[deptSelect.selectedIndex]?.text || '',
+                program: progSelect?.options[progSelect.selectedIndex]?.text || '',
+                yearLevel: yearSelect?.options[yearSelect.selectedIndex]?.text || '',
+                reason: reasonTextarea?.value.trim() || '',
+                // Store files as base64
+                photoFile: {
+                    name: photo.files[0].name,
+                    data: photoBase64,
+                    type: photo.files[0].type
+                },
+                docFile: {
+                    name: doc.files[0].name,
+                    data: docBase64,
+                    type: doc.files[0].type
+                },
+                signFile: {
+                    name: sign.files[0].name,
+                    data: signBase64,
+                    type: sign.files[0].type
+                }
+            }
+        };
+
+        // Keep legacy single-request storage for compatibility
+        const legacyNameInput = this.querySelector("input[type='text']");
+        
+        // Save request to localStorage (no backend needed)
+        try {
+            requests.push(newRequest);
+            localStorage.setItem('requests', JSON.stringify(requests));
+            localStorage.setItem("request_id", requestId);
+            localStorage.setItem("request_status", "pending");
+            if (legacyNameInput) {
+                localStorage.setItem("request_name", legacyNameInput.value);
+            }
+
+            console.log('Request saved to localStorage:', newRequest);
+            alert('Request submitted successfully! You will see it in your dashboard.');
+            window.location.href = "student-dashboard.html";
+        } catch (error) {
+            console.error('Failed to save request:', error);
+            alert('Error submitting request: ' + error.message);
+        }
+    }).catch(error => {
+        console.error('Error reading files:', error);
+        alert('Error reading uploaded files. Please try again.');
+    });
+});
+
+function getAllRequests() {
+    try {
+        const stored = localStorage.getItem('requests');
+        return stored ? JSON.parse(stored) : [];
+    } catch (e) {
+        return [];
+    }
+}
+
+// Initialize dark mode if enabled
+window.addEventListener('DOMContentLoaded', () => {
+  try {
+    const darkModeEnabled = localStorage.getItem('pref-darkMode') === '1';
+    if (darkModeEnabled) {
+      document.body.classList.add('dark-mode');
+    }
+  } catch(e) {}
+});
+</script>
+
+</body>
+</html>

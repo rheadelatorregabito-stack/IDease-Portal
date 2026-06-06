@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IDEease Portal - History</title>
+
+<link rel="stylesheet" href="style.css">
+
+<!-- FONT AWESOME -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+<!-- ---------------- SIDEBAR ---------------- -->
+<div class="sidebar">
+    <div class="logo">
+        <i class="fa-solid fa-graduation-cap"></i>
+        <h2>IDEease Portal</h2>
+        <p>Student Services</p>
+    </div>
+
+        <div class="menu">
+            <a href="student-dashboard.html">
+                <div class="menu-item">
+                    <i class="fa-solid fa-house"></i>
+                    Dashboard
+                </div>
+            </a>
+
+            <a href="history.html">
+                <div class="menu-item active">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                    History
+                </div>
+            </a>
+
+            <a href="help center.html">
+                <div class="menu-item">
+                    <i class="fa-solid fa-headset"></i>
+                    Help & Support
+                </div>
+            </a>
+
+            <a href="profile.html">
+                <div class="menu-item">
+                    <i class="fa-solid fa-user"></i>
+                    Profile
+                </div>
+            </a>
+
+            <a href="setting.html">
+                <div class="menu-item">
+                    <i class="fa-solid fa-gear"></i>
+                    Settings
+                </div>
+            </a>
+        </div>
+</div>
+    <div class="main">
+    
+    <div class="header">
+        <div>
+            <h1>History</h1>
+            <span>Explore the history for school ID request.</span>
+        </div>
+        <a href="notif.html"><i class="fa-regular fa-bell"></i></a>
+    </div>
+
+    <!-- Statistics Section -->
+    <div class="stats">
+        <div class="stat-card stat-inline">
+            <i class="fa-solid fa-list-check"></i>
+            <div class="stat-text">
+                <h3>Total Requests:</h3>
+                <p>24</p>
+            </div>
+        </div>
+
+        <div class="stat-card stat-inline">
+            <i class="fa-solid fa-clock" style="color: orange;"></i>
+            <div class="stat-text">
+                <h3>Pending:</h3>
+                <p>8</p>
+            </div>
+        </div>
+
+        <div class="stat-card stat-inline">
+            <i class="fa-solid fa-spinner" style="color: blue;"></i>
+            <div class="stat-text">
+                <h3>Processing:</h3>
+                <p>5</p>
+            </div>
+        </div>
+
+        <div class="stat-card stat-inline">
+            <i class="fa-solid fa-circle-check" style="color: rgb(31, 184, 31);"></i>
+            <div class="stat-text">
+                <h3>Completed:</h3>
+                <p>11</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table with Request ID column -->
+<!-- Updated Search Row -->
+<div class="search-row">
+    <input type="text" placeholder="Search requests...">
+    <select id="statusFilter">
+        <option value="all">All Status</option>
+        <option value="pending">Pending</option>
+        <option value="processing">Processing</option>
+        <option value="completed">Completed</option>
+        <option value="rejected">Rejected</option>
+    </select>
+</div>
+
+<!-- Table with Rejected Row -->
+<div class="table-card">
+    <table>
+        <tr>
+            <th>Request ID</th>
+            <th>Request Type</th>
+            <th>Date Submitted</th>
+            <th>Status</th>
+        </tr>
+
+        <tr>
+            <td>#ID-123456</td>
+            <td>New Student ID</td>
+            <td>Dec 15, 2024</td>
+            <td>
+                <span class="pill processing" data-status="processing">
+                    <i class="fa-solid fa-spinner"></i> Processing
+                </span>
+            </td>
+        </tr>
+
+        <tr>
+            <td>#ID-654321</td>
+            <td>ID Replacement</td>
+            <td>Dec 16, 2025</td>
+            <td>
+                <span class="pill completed" data-status="completed">
+                    <i class="fa-solid fa-circle-check"></i> Completed
+                </span>
+            </td>
+        </tr>
+
+        <tr data-id="234165">
+            <td>#ID-234165</td>
+            <td>New Student ID</td>
+            <td>Dec 15, 2025</td>
+            <td>
+                <span class="pill pending" data-status="pending">
+                    <i class="fa-solid fa-clock"></i> Pending
+                </span>
+            </td>
+        </tr>
+
+        <tr>
+            <td>#ID-987654</td>
+            <td>ID Replacement</td>
+            <td>Dec 17, 2025</td>
+            <td>
+                <span class="pill rejected" data-status="rejected">
+                    <i class="fa-solid fa-circle-xmark"></i> Rejected
+                </span>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<script>
+    // Role-based access control
+    function getCurrentUser() {
+        try {
+            const user = JSON.parse(localStorage.getItem('user')) || {};
+            return user;
+        } catch (e) {
+            return {};
+        }
+    }
+
+    function isAdmin() {
+        const user = getCurrentUser();
+        return user.role === 'admin' || user.accountType === 'admin';
+    }
+
+    function getCurrentStudentId() {
+        const user = getCurrentUser();
+        return user.studentId || null;
+    }
+
+    // Request database: stores all requests with student associations
+    function getAllRequests() {
+        try {
+            const stored = localStorage.getItem('requests');
+            return stored ? JSON.parse(stored) : getDefaultRequests();
+        } catch (e) {
+            return getDefaultRequests();
+        }
+    }
+
+    // Default sample requests with student IDs
+    function getDefaultRequests() {
+        return [
+            { id: 'ID-123456', type: 'New Student ID', date: 'Dec 15, 2024', status: 'processing', studentId: '123456' },
+            { id: 'ID-654321', type: 'ID Replacement', date: 'Dec 16, 2025', status: 'completed', studentId: '654321' },
+            { id: 'ID-234165', type: 'New Student ID', date: 'Dec 15, 2025', status: 'pending', studentId: '234165' },
+            { id: 'ID-987654', type: 'ID Replacement', date: 'Dec 17, 2025', status: 'rejected', studentId: '987654' }
+        ];
+    }
+
+    // Filter requests based on role
+    function getVisibleRequests() {
+        const allRequests = getAllRequests();
+        const admin = isAdmin();
+        const currentStudentId = getCurrentStudentId();
+
+        if (admin) {
+            return allRequests; // admins see all
+        } else {
+            return allRequests.filter(req => req.studentId === currentStudentId);
+        }
+    }
+
+    const statusSelect = document.getElementById('statusFilter');
+    const tableRows = document.querySelectorAll('.table-card table tr');
+    const searchInput = document.querySelector('.search-row input');
+    const user = getCurrentUser();
+    const adminMode = isAdmin();
+
+    // Show admin indicator if user is admin
+    if (adminMode) {
+        const header = document.querySelector('.table-header');
+        if (header) {
+            const adminBadge = document.createElement('div');
+            adminBadge.style.cssText = 'display:inline-block;background:#3b82f6;color:white;padding:6px 12px;border-radius:6px;margin-left:12px;font-size:12px;font-weight:600';
+            adminBadge.textContent = 'ADMIN VIEW: All Requests';
+            header.parentNode.insertBefore(adminBadge, header.nextSibling);
+        }
+    }
+
+    function filterTable() {
+        const selectedStatus = statusSelect.value.toLowerCase();
+        const searchText = searchInput.value.toLowerCase();
+        const visibleRequests = getVisibleRequests();
+        const visibleIds = new Set(visibleRequests.map(r => r.id));
+
+        tableRows.forEach((row, index) => {
+            if(index === 0) return; // skip header row
+
+            const requestId = row.querySelector('td:nth-child(1)')?.textContent?.trim();
+            const statusSpan = row.querySelector('td:nth-child(4) span');
+            const rowStatus = statusSpan?.getAttribute('data-status')?.toLowerCase() || '';
+            const rowText = row.innerText.toLowerCase();
+
+            // Check if this request is visible to the current user
+            const isAccessible = adminMode || visibleIds.has(requestId);
+            const statusMatch = selectedStatus === 'all' || rowStatus === selectedStatus;
+            const searchMatch = rowText.includes(searchText);
+
+            row.style.display = (isAccessible && statusMatch && searchMatch) ? '' : 'none';
+        });
+    }
+
+    statusSelect.addEventListener('change', filterTable);
+    searchInput.addEventListener('input', filterTable);
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const rows = document.querySelectorAll('tr[data-id]');
+        rows.forEach(row => {
+            const id = row.getAttribute('data-id');
+            const status = localStorage.getItem(id + '_status');
+            if (status === 'rejected') {
+                row.remove();
+            }
+        });
+    });
+
+    // Initialize dark mode if enabled in localStorage
+    window.addEventListener('DOMContentLoaded', () => {
+        try {
+            const darkModeEnabled = localStorage.getItem('pref-darkMode') === '1';
+            if (darkModeEnabled) {
+                document.body.classList.add('dark-mode');
+            }
+        } catch(e) {}
+    });
+</script>
+
+
+</div>
+
+</body>
+</html>

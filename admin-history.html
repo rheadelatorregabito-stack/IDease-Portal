@@ -1,0 +1,586 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>IDEase Portal — Admin History</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(110deg, #0a1a33 0%, #1a2744 100%);
+      --card-bg: #ffffff;
+      --card-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      --text-primary: #000000;
+      --text-secondary: #555;
+      --input-bg: #fafafa;
+      --input-border: #ccc;
+      --input-focus: #1b234b;
+      --btn-bg: #5d6fd2;
+      --btn-hover: #4b5ecc;
+      --link-color: #4b8acb;
+      --error: #dc2626;
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #0f2340;
+      --muted: #6b7280;
+      --accent: #1e56d6;
+      --border: #e4ebf8;
+      --radius: 18px;
+      --shadow: 0 16px 48px rgba(15, 23, 42, 0.08);
+    }
+
+    body.dark-mode {
+      --bg-gradient: linear-gradient(110deg, #0d0d0d 0%, #1a1a1a 100%);
+      --card-bg: #2a2a2a;
+      --card-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      --text-primary: #ffffff;
+      --text-secondary: #d0d0d0;
+      --input-bg: #333333;
+      --input-border: #444444;
+      --input-focus: #5d6fd2;
+      --btn-bg: #5d6fd2;
+      --btn-hover: #4b5ecc;
+      --link-color: #7ba3d4;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Poppins", sans-serif;
+      background: var(--bg-gradient);
+      min-height: 100vh;
+      display: flex;
+      color: var(--text-primary);
+    }
+
+    .sidebar {
+      width: 220px;
+      height: 100vh;
+      background: #0a1a33;
+      color: white;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      border-radius: 0 20px 20px 0;
+      box-shadow: 4px 0 20px rgba(0, 0, 0, 0.4);
+      overflow: hidden;
+    }
+
+    .sidebar .logo {
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    .sidebar .logo i {
+      font-size: 34px;
+    }
+
+    .sidebar .logo h2 {
+      margin: 10px 0 0;
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .sidebar .logo p {
+      margin: 0;
+      color: #9ca3af;
+      font-size: 13px;
+    }
+
+    .menu {
+      margin-top: 20px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .menu-item {
+      padding: 12px 15px;
+      margin-bottom: 8px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #d9e3f5;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .menu-item:hover,
+    .menu-item.active {
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+    }
+
+    .menu-item i {
+      width: 20px;
+      text-align: center;
+    }
+
+    .main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 45px;
+      background: var(--bg);
+    }
+
+    .header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 30px;
+    }
+
+    .header h1 {
+      margin: 0 0 8px;
+      font-size: 32px;
+      color: var(--text);
+    }
+
+    .header p {
+      margin: 0;
+      color: var(--muted);
+      max-width: 640px;
+    }
+
+    .header .icon-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: white;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #eef2ff;
+      cursor: pointer;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 18px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: var(--card);
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+      border: 1px solid #f0f4ff;
+    }
+
+    .stat-card h3 {
+      margin: 0 0 10px;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+    }
+
+    .stat-card p {
+      margin: 0;
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    .content-card {
+      background: var(--card);
+      border-radius: 28px;
+      padding: 26px;
+      box-shadow: var(--shadow);
+      border: 1px solid #f0f4ff;
+    }
+
+    .content-card h2 {
+      margin: 0 0 20px;
+      font-size: 22px;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .controls input,
+    .controls select {
+      border: 2px solid var(--input-border);
+      border-radius: 12px;
+      background: var(--input-bg);
+      padding: 14px 16px;
+      min-width: 180px;
+      color: var(--text-primary);
+      font-size: 14px;
+      outline: none;
+      transition: 0.3s;
+      font-family: "Poppins", sans-serif;
+    }
+
+    .controls input:focus,
+    .controls select:focus {
+      border-color: var(--input-focus);
+      box-shadow: 0 0 8px rgba(93, 111, 210, 0.3);
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 900px;
+    }
+
+    thead th {
+      text-align: left;
+      padding: 14px 16px;
+      color: var(--muted);
+      font-size: 13px;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      border-bottom: 1px solid #eef2ff;
+    }
+
+    tbody tr {
+      transition: background 0.2s ease;
+    }
+
+    tbody tr:hover {
+      background: #f7faff;
+    }
+
+    td {
+      padding: 16px 16px;
+      border-bottom: 1px solid #f2f6ff;
+      vertical-align: middle;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .pill.pending {
+      background: #f6f4ff;
+      color: #5f42d0;
+    }
+
+    .pill.processing {
+      background: #eff8ff;
+      color: #1d4ed8;
+    }
+
+    .pill.completed {
+      background: #e9f8ef;
+      color: #047857;
+    }
+
+    .pill.rejected {
+      background: #fef3f2;
+      color: #b91c1c;
+    }
+
+    .no-data {
+      padding: 40px 0;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    @media (max-width: 1100px) {
+      .stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 760px) {
+      body {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+        border-radius: 0 0 24px 24px;
+      }
+
+      .main {
+        padding: 20px;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .controls {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <div class="logo">
+      <i class="fa-solid fa-graduation-cap"></i>
+      <h2>IDEase Portal</h2>
+      <p>Admin Services</p>
+    </div>
+    <div class="menu">
+      <a href="admin-dashboard.html" class="menu-item"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
+      <a href="admin-dashboard.html#adminRequests" class="menu-item"><i class="fa-solid fa-inbox"></i> Admin Requests</a>
+      <a href="admin-history.html" class="menu-item active"><i class="fa-solid fa-clock-rotate-left"></i> History</a>
+      <a href="admin-settings.html" class="menu-item"><i class="fa-solid fa-gear"></i> Settings</a>
+    </div>
+  </div>
+
+  <main class="main">
+    <div class="header">
+      <div>
+        <h1>Admin History</h1>
+        <p>Review all student requests and audit history from the admin portal. Filter by status, search by request ID or student name, and monitor the latest processing activity.</p>
+      </div>
+      <button class="icon-btn" title="Refresh requests" id="refreshButton"><i class="fa-solid fa-arrows-rotate"></i></button>
+    </div>
+
+    <div class="stats-grid" id="summaryCards">
+      <div class="stat-card"><h3>Total Requests</h3><p id="totalRequests">0</p></div>
+      <div class="stat-card"><h3>Pending</h3><p id="pendingRequests">0</p></div>
+      <div class="stat-card"><h3>Processing</h3><p id="processingRequests">0</p></div>
+      <div class="stat-card"><h3>Completed</h3><p id="completedRequests">0</p></div>
+    </div>
+
+    <section class="content-card">
+      <div class="controls">
+        <input type="text" id="searchInput" placeholder="Search requests by ID, name, or student ID" />
+        <select id="statusFilter">
+          <option value="all">All Status</option>
+          <option value="pending">Pending</option>
+          <option value="processing">Processing</option>
+          <option value="completed">Completed</option>
+          <option value="rejected">Rejected</option>
+        </select>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Request ID</th>
+              <th>Student Name</th>
+              <th>Student ID</th>
+              <th>Type</th>
+              <th>Date Submitted</th>
+              <th>Status</th>
+              <th>Last Updated</th>
+            </tr>
+          </thead>
+          <tbody id="historyTableBody"></tbody>
+        </table>
+        <div id="noRequestsMessage" class="no-data" style="display:none;">No request records found.</div>
+      </div>
+    </section>
+
+    <section class="content-card" style="margin-top: 30px;">
+      <h2 style="margin-bottom: 20px;">Activity History</h2>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Timestamp</th>
+              <th>Admin</th>
+              <th>Action</th>
+              <th>Request ID</th>
+              <th>Details</th>
+            </tr>
+          </thead>
+          <tbody id="activityHistoryTableBody"></tbody>
+        </table>
+        <div id="noActivityMessage" class="no-data" style="display:none;">No activity records found.</div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    function getCurrentUser() {
+      try { return JSON.parse(localStorage.getItem('user')) || {}; } catch (e) { return {}; }
+    }
+
+    // Ensure activityHistory array exists in localStorage
+    if (!localStorage.getItem('activityHistory')) {
+      localStorage.setItem('activityHistory', JSON.stringify([]));
+    }
+
+    function isAdmin() {
+      const user = getCurrentUser();
+      const role = ((user.role || user.accountType || '') + '').toLowerCase();
+      const adminSession = JSON.parse(localStorage.getItem('adminSession') || '{}');
+      return role === 'admin' || adminSession.verified === true;
+    }
+
+    function getAllRequests() {
+      try {
+        const stored = localStorage.getItem('requests');
+        return stored ? JSON.parse(stored) : getDefaultRequests();
+      } catch (e) {
+        return getDefaultRequests();
+      }
+    }
+
+    function getDefaultRequests() {
+      return [
+        { id: 'ID-123456', studentName: 'Aisha Bello', studentId: '123456', type: 'New Student ID', submitted: '2025-03-08', status: 'processing', updated: '2025-03-10' },
+        { id: 'ID-654321', studentName: 'David Okonkwo', studentId: '654321', type: 'ID Replacement', submitted: '2025-03-02', status: 'completed', updated: '2025-03-06' },
+        { id: 'ID-234165', studentName: 'Chidinma Eze', studentId: '234165', type: 'Photo Update', submitted: '2025-03-10', status: 'pending', updated: '2025-03-10' },
+        { id: 'ID-987654', studentName: 'Samuel Adebayo', studentId: '987654', type: 'New Student ID', submitted: '2025-03-01', status: 'rejected', updated: '2025-03-03' }
+      ];
+    }
+
+    function formatStatus(status) {
+      const map = {
+        pending: { label: 'Pending', class: 'pending', icon: 'fa-clock' },
+        processing: { label: 'Processing', class: 'processing', icon: 'fa-spinner' },
+        completed: { label: 'Completed', class: 'completed', icon: 'fa-circle-check' },
+        rejected: { label: 'Rejected', class: 'rejected', icon: 'fa-circle-xmark' }
+      };
+      return map[status] || { label: status, class: 'pending', icon: 'fa-clock' };
+    }
+
+    function renderSummary(requests) {
+      const total = requests.length;
+      const pending = requests.filter(r => r.status === 'pending').length;
+      const processing = requests.filter(r => r.status === 'processing').length;
+      const completed = requests.filter(r => r.status === 'completed').length;
+      document.getElementById('totalRequests').textContent = total;
+      document.getElementById('pendingRequests').textContent = pending;
+      document.getElementById('processingRequests').textContent = processing;
+      document.getElementById('completedRequests').textContent = completed;
+    }
+
+    function renderTable(requests) {
+      const tbody = document.getElementById('historyTableBody');
+      const noData = document.getElementById('noRequestsMessage');
+      tbody.innerHTML = '';
+      if (!requests.length) {
+        noData.style.display = 'block';
+        return;
+      }
+      noData.style.display = 'none';
+      requests.forEach(req => {
+        const status = formatStatus(req.status);
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${req.id}</td>
+          <td>${req.studentName}</td>
+          <td>${req.studentId}</td>
+          <td>${req.type}</td>
+          <td>${new Date(req.submitted).toLocaleDateString()}</td>
+          <td><span class="pill ${status.class}"><i class="fa-solid ${status.icon}"></i> ${status.label}</span></td>
+          <td>${new Date(req.updated).toLocaleDateString()}</td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    function filterRequests() {
+      const search = document.getElementById('searchInput').value.toLowerCase();
+      const status = document.getElementById('statusFilter').value;
+      const requests = getAllRequests();
+      const filtered = requests.filter(req => {
+        const text = `${req.id} ${req.studentName} ${req.studentId} ${req.type}`.toLowerCase();
+        const matchesSearch = !search || text.includes(search);
+        const matchesStatus = status === 'all' || req.status === status;
+        return matchesSearch && matchesStatus;
+      });
+      renderSummary(filtered);
+      renderTable(filtered);
+    }
+
+    function getActivityHistory() {
+      try {
+        const stored = localStorage.getItem('activityHistory');
+        console.log('Retrieved activityHistory from localStorage:', stored);
+        return stored ? JSON.parse(stored) : [];
+      } catch (e) {
+        console.error('Error parsing activity history:', e);
+        return [];
+      }
+    }
+
+    function renderActivityHistory() {
+      const tbody = document.getElementById('activityHistoryTableBody');
+      const noData = document.getElementById('noActivityMessage');
+      const activities = getActivityHistory();
+      
+      console.log('Rendering activity history. Total activities:', activities.length);
+      console.log('Activities:', activities);
+      
+      tbody.innerHTML = '';
+      if (!activities.length) {
+        noData.style.display = 'block';
+        return;
+      }
+      noData.style.display = 'none';
+      
+      // Display activities in reverse chronological order (newest first)
+      activities.slice().reverse().forEach(activity => {
+        const row = document.createElement('tr');
+        const timestamp = new Date(activity.timestamp).toLocaleString();
+        const admin = activity.userId || 'Unknown';
+        const action = activity.action || 'Unknown';
+        const requestId = activity.details?.requestId || activity.details?.id || '—';
+        const details = activity.details ? 
+          (activity.action === 'UPDATE_REQUEST_STATUS' ? 
+            `Changed status from ${activity.details.oldStatus} to ${activity.details.newStatus}` :
+            JSON.stringify(activity.details)) : '—';
+        
+        row.innerHTML = `
+          <td>${timestamp}</td>
+          <td>${admin}</td>
+          <td>${action}</td>
+          <td>${requestId}</td>
+          <td>${details}</td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    function initHistoryPage() {
+      if (!isAdmin()) {
+        document.body.innerHTML = '<div style="padding:40px;font-family:Inter,Arial,sans-serif"><h1>Access denied</h1><p>This page is only available for admin users.</p></div>';
+        return;
+      }
+      
+      console.log('Initializing history page...');
+      
+      // Load and display both request history and activity history
+      filterRequests();
+      renderActivityHistory();
+      
+      // Add event listeners
+      document.getElementById('searchInput').addEventListener('input', filterRequests);
+      document.getElementById('statusFilter').addEventListener('change', filterRequests);
+      document.getElementById('refreshButton').addEventListener('click', () => {
+        console.log('Refresh button clicked');
+        filterRequests();
+        renderActivityHistory();
+      });
+      
+      console.log('History page initialization complete');
+    }
+
+    window.addEventListener('DOMContentLoaded', initHistoryPage);
+  </script>
+</body>
+</html>

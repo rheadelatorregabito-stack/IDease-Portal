@@ -1,0 +1,1097 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>IDEase Portal — Profile</title>
+  <!-- FONT AWESOME ICONS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root{
+      --sidebar-width: 280px;
+      --navy: #0f2340;
+      --muted: #6b7280;
+      --card-bg: #ffffff;
+      --accent: #1e56d6;
+      --bg: #f5f7fb;
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --input-bg: #fbfdff;
+      --input-border: #e6eefc;
+      --detail-bg: #f8fbff;
+      --detail-border: #e5ecff;
+      --radius: 14px;
+      --shadow: 0 6px 18px rgba(11,18,35,0.06);
+      --max-main-width: 920px;
+      --gap: 20px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", Arial;
+    }
+
+    body.dark-mode {
+      --card-bg: #1a1a1a;
+      --bg: #0f0f0f;
+      --text-primary: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --muted: #94a3b8;
+      --input-bg: #1a1a1a;
+      --input-border: #2d2d2d;
+      --detail-bg: #0f0f0f;
+      --detail-border: #2d2d2d;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Inter", Arial, sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text-primary);
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* ================= SIDEBAR ================= */
+    .sidebar {
+      width: 220px;
+      height: 100vh;
+      background: #0f2340;
+      color: white;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      border-radius: 0 20px 20px 0;
+      box-shadow: 4px 0 20px rgba(0,0,0,0.25);
+    }
+
+    .logo {
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    .logo h2 {
+      font-size: 24px;
+      margin: 10px 0 0;
+    }
+
+    .sidebar .logo i {
+      font-size: 34px;
+      color: #fff;
+    }
+
+    .logo span,
+    .logo p {
+      font-size: 12px;
+      color: #b9c6e0;
+    }
+
+    .menu {
+      margin-top: 20px;
+      flex-grow: 1;
+    }
+
+    .menu-item {
+      padding: 12px 15px;
+      margin-bottom: 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #d9e3f5;
+      text-decoration: none;
+    }
+
+    .menu-item:hover,
+    .menu-item.active {
+      background: rgba(255,255,255,0.1);
+    }
+
+    .profile-card {
+      background: #12294d;
+      padding: 15px;
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: auto;
+    }
+
+    .profile-card img {
+      width: 50px;
+      height: 35px;
+      border-radius: 50%;
+    }
+
+    .profile-info p {
+      font-size: 12px;
+      margin: 0;
+      opacity: 0.85;
+    }
+
+    .student-tag {
+      background: #1f3a66;
+      padding: 3px 7px;
+      border-radius: 6px;
+      font-size: 10px;
+      display: inline-block;
+      margin-top: 3px;
+    }
+
+    /* Main content area */
+    .main {
+      flex: 1;
+      min-height: 100vh;
+      padding: 28px 32px;
+      overflow-y: auto;
+      background: var(--bg);
+      position: relative;
+    }
+
+    .header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .page-title {
+      font-size: 29px;
+      font-weight: 700;
+    }
+
+    .header-controls {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .icon-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: white;
+      border: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+    }
+
+    /* Logout button on top-right */
+    .logout-btn {
+      position: absolute;
+      top: 28px;
+      right: 32px;
+      background: #dc3545;
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: 0.2s;
+    }
+
+    .logout-btn:hover {
+      background: #b02a37;
+    }
+
+    .container {
+      width: 100%;
+      max-width: none;
+      margin: 0;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+      margin-top: 30px;
+      color: var(--text-primary);
+    }
+
+    .card h3 {
+      margin: 0 0 12px 0;
+      font-size: 15px;
+    }
+
+    .card .muted {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .profile-grid {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .avatar-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .profile-details {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .detail-section {
+      background: var(--detail-bg);
+      border-radius: 14px;
+      padding: 18px;
+      border: 1px solid var(--detail-border);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
+    }
+
+    .detail-section h4 {
+      margin: 0 0 12px 0;
+      font-size: 14px;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .detail-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .detail-row .full {
+      grid-column: 1 / -1;
+    }
+
+    .logout-btn {
+      position: absolute;
+      top: 28px;
+      right: 32px;
+      background: #dc3545;
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: 0.2s;
+    }
+
+    .avatar-preview {
+      width: 120px;
+      height: 120px;
+      border-radius: 999px;
+      border: 6px solid #fff;
+      box-shadow: 0 6px 24px rgba(32,45,90,0.08);
+      background: var(--input-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: var(--text-secondary);
+      overflow: hidden;
+    }
+
+    .avatar-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 0;
+      background: var(--accent);
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn.ghost {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--input-border);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(2,1fr);
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .form-row .full {
+      grid-column: 1/-1;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 6px;
+      color: var(--text-secondary);
+    }
+
+    input[type="text"], input[type="email"], input[type="tel"], input[type="date"], select, input[type="password"] {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--input-border);
+      background: var(--input-bg);
+      box-sizing: border-box;
+      font-size: 14px;
+      color: var(--text-primary);
+    }
+
+    input[disabled] {
+      background: var(--input-bg);
+      color: var(--muted);
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(30,86,214,0.1);
+    }
+
+    .field-note {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    .activity-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+      margin-top: 20px;
+    }
+
+    .activity-card h3 {
+      margin: 0 0 12px 0;
+      font-size: 15px;
+    }
+
+    .activity-item {
+      padding: 12px 0;
+      border-bottom: 1px solid var(--input-border);
+      color: var(--text-primary);
+      font-size: 14px;
+    }
+
+    .activity-item:last-child {
+      border-bottom: none;
+    }
+
+    .activity-meta {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    .save-wrap {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 18px;
+      gap: 12px;
+    }
+
+    .save-btn {
+      background: var(--accent);
+      color: white;
+      padding: 12px 18px;
+      border-radius: 10px;
+      border: 0;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 8px 22px rgba(30,86,214,0.18);
+      transition: 0.2s;
+    }
+
+    .save-btn:hover {
+      background: #1544b8;
+    }
+
+    .cancel-btn {
+      background: transparent;
+      color: var(--muted);
+      padding: 12px 18px;
+      border-radius: 10px;
+      border: 1px solid #e6eefc;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .cancel-btn:hover {
+      background: rgba(30,86,214,0.08);
+    }
+
+    .edit-mode input,
+    .edit-mode select {
+      border-color: var(--accent);
+      background: #fbfdff;
+    }
+
+    @media (max-width:1050px){
+      .profile-grid{grid-template-columns:1fr}
+      .form-row{grid-template-columns:1fr}
+      .main{padding:20px}
+    }
+    @media (max-width:768px){
+      body{height:auto}
+      .sidebar{width:100%;height:auto;border-radius:0;flex-direction:row;padding:10px;position:sticky;top:0;z-index:100}
+      .logo{margin-bottom:0}
+      .logo h2{font-size:18px}
+      .menu{flex-direction:row;margin-top:0;gap:5px}
+      .menu-item{padding:8px 12px;font-size:12px;margin-bottom:0}
+      .main{padding:15px;margin-top:0}
+      .page-title{font-size:20px}
+      .save-wrap{flex-direction:column}
+      .save-btn,.cancel-btn{width:100%}
+      .detail-section{padding:15px}
+      .avatar-wrap{width:80px;height:80px}
+    }
+    @media (max-width:600px){
+      .sidebar{flex-direction:column;height:auto;padding:10px;border-radius:0}
+      .logo{margin-bottom:15px;display:flex;align-items:center;gap:10px}
+      .logo h2{font-size:16px;margin:0}
+      .logo i{font-size:24px}
+      .menu{flex-direction:column;gap:0}
+      .menu-item{padding:10px 12px;font-size:11px}
+      .main{padding:12px}
+      .page-title{font-size:18px}
+      .container{padding:0}
+      .logout-btn{padding:8px 12px;font-size:12px}
+      input,select,textarea{font-size:16px}
+      .form-label{font-size:12px}
+      .detail-section{padding:12px;margin-bottom:12px}
+      .avatar-wrap{width:70px;height:70px}
+      h3{font-size:16px}
+    }
+  </style>
+</head>
+<body>
+<div class="sidebar">
+    <!-- LOGO -->
+    <div class="logo">
+        <i class="fa-solid fa-graduation-cap"></i>
+        <h2>IDEease Portal</h2>
+        <p>Student Services</p>
+    </div>
+
+    <!-- MENU -->
+    <div class="menu">
+        <a href="student-dashboard.html" class="menu-item">
+            <i class="fa-solid fa-house"></i> Dashboard
+        </a>
+        <a href="help center.html" class="menu-item">
+            <i class="fa-solid fa-headset"></i> Help & Support
+        </a>
+        <a href="profile.html" class="menu-item active">
+            <i class="fa-solid fa-user"></i> Profile
+        </a>
+        <a href="setting.html" class="menu-item">
+            <i class="fa-solid fa-gear"></i> Settings
+        </a>
+    </div>
+</div>
+
+<main class="main">
+  <!-- Logout Button -->
+  <button class="logout-btn" onclick="logout()">
+    <i class="fa-solid fa-right-from-bracket"></i> Logout
+  </button>
+
+  <div class="container">
+    <div class="header-row">
+      <div>
+        <div class="page-title">Profile</div>
+        <p class="muted" id="welcomeGreeting">Welcome back, Student!</p>
+        <div style="margin-top:6px"><span id="presenceStatus" class="muted">Status: checking…</span></div>
+      </div>
+      <div class="header-controls">
+      </div>
+    </div>
+
+    <!-- Profile Settings card -->
+    <section class="card" aria-labelledby="profile-heading">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div>
+          <h3 id="profile-heading">Your Profile</h3>
+          <div class="muted">View and manage your personal information</div>
+        </div>
+        <button type="button" class="btn" id="editProfileBtn" onclick="enableEditMode()" aria-label="Edit Profile">
+          <i class="fa-solid fa-pen"></i> Edit Profile
+        </button>
+      </div>
+
+      <!-- PROFILE GRID -->
+      <form class="profile-form" id="profileForm" onsubmit="return false">
+      <div class="profile-grid" style="margin-top:20px">
+        <div class="avatar-wrap">
+          <div class="avatar-preview" id="avatarPreview" title="Profile photo preview">
+            <img id="avatarImg" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Crect width='24' height='24' fill='%23f3f4f6'/%3E%3Ctext x='50%25' y='50%25' alignment-baseline='central' text-anchor='middle' fill='%23374651' font-size='10'%3EJR%3C/text%3E%3C/svg%3E" alt="Profile preview">
+          </div>
+          <div style="display:flex;gap:8px;display:none" id="photoButtons">
+            <label class="btn" for="photoUpload">Upload Photo</label>
+            <input id="photoUpload" type="file" accept="image/*" style="display:none">
+            <button class="btn ghost" id="removePhoto" type="button">Remove</button>
+          </div>
+          <div class="field-note">JPG, PNG or GIF. Max size 5MB.</div>
+        </div>
+
+        <div class="profile-details">
+          <section class="detail-section" aria-label="Personal Details">
+            <h4>Personal Details</h4>
+            <div class="detail-row">
+              <div>
+                <label for="fullName">Full Name</label>
+                <input id="fullName" type="text" placeholder="Full Name" disabled />
+              </div>
+              <div>
+                <label for="email">Email Address</label>
+                <input id="email" type="email" placeholder="Email (blank until saved)" disabled />
+              </div>
+              <div>
+                <label for="phone">Phone Number</label>
+                <input id="phone" type="tel" placeholder="Phone number" disabled />
+              </div>
+              <div>
+                <label for="dob">Date of Birth</label>
+                <input id="dob" type="date" disabled />
+              </div>
+            </div>
+          </section>
+
+          <section class="detail-section" aria-label="Academic Details">
+            <h4>Academic Details</h4>
+            <div class="detail-row">
+              <div>
+                <label for="studentId">Student ID</label>
+                <input id="studentId" type="text" placeholder="Student ID" disabled />
+              </div>
+              <div>
+                <label for="currentRole">Current Role</label>
+                <input id="currentRole" type="text" placeholder="Student" disabled />
+              </div>
+              <div class="full">
+                <label for="dept">Department / College</label>
+                <select id="dept" aria-label="Department" disabled>
+                  <option value="">Select your college</option>
+                  <option value="cafnr">College of Agriculture, Fisheries and Natural Resources</option>
+                  <option value="cac">College of Arts and Communication</option>
+                  <option value="cba">College of Business Administration</option>
+                  <option value="coed">College of Education</option>
+                  <option value="coe">College of Engineering</option>
+                  <option value="col">College of Law</option>
+                  <option value="cnahs">College of Nursing and Allied Health Sciences</option>
+                  <option value="cos">College of Science</option>
+                  <option value="cvm">College of Veterinary Medicine</option>
+                </select>
+              </div>
+              <div class="full">
+                <label for="program">Program / Degree</label>
+                <select id="program" aria-label="Program" disabled>
+                  <option value="">Select program</option>
+                </select>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <div class="save-wrap" id="actionButtons" style="display:none">
+        <button class="cancel-btn" onclick="cancelEdit()">Cancel</button>
+        <button class="save-btn" id="saveProfileBtn" onclick="saveProfile()">
+          <i class="fa-solid fa-check"></i> Save Changes
+        </button>
+      </div>
+      <div id="saveMessage" style="display:none;margin-top:12px;color:var(--success,#0b6623)"></div>
+      </form>
+    </section>
+
+    <section class="activity-card" aria-labelledby="activity-heading">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div>
+          <h3 id="activity-heading">Activity Log</h3>
+          <p class="muted">Recent sign-in and profile changes for your account.</p>
+        </div>
+        <span class="activity-meta" id="lastLoginDisplay">Last login: never</span>
+      </div>
+      <div id="activityLog">
+        <div class="activity-item">No activity available yet.</div>
+      </div>
+    </section>
+
+    <div style="text-align:center;margin-top:18px">
+      <button class="btn ghost" id="adminAccessBtn" onclick="requestAdminAccess()">
+        <i class="fa-solid fa-lock"></i> Admin
+      </button>
+    </div>
+
+    <div style="height:40px"></div>
+  </div>
+</main>
+
+<script>
+  const defaultAvatar = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Crect width='240' height='240' fill='%23f3f4f6'/%3E%3Ctext x='50%25' y='50%25' alignment-baseline='central' text-anchor='middle' fill='%23374651' font-size='40'%3EST%3C/text%3E%3C/svg%3E";
+  // Avatar file preview and remove
+  const photoUpload = document.getElementById('photoUpload');
+  const avatarImg = document.getElementById('avatarImg');
+  const removeBtn = document.getElementById('removePhoto');
+  const photoButtons = document.getElementById('photoButtons');
+
+  function getUserFromStorage() {
+    try {
+      const data = localStorage.getItem('user');
+      return data ? JSON.parse(data) : {};
+    } catch (e) {
+      return {};
+    }
+  }
+
+  function saveUserToStorage(user) {
+    localStorage.setItem('user', JSON.stringify(user));
+  }
+
+  function updateActivityPanel(user) {
+    const activityLog = document.getElementById('activityLog');
+    const lastLoginDisplay = document.getElementById('lastLoginDisplay');
+    const history = user.activityHistory || [];
+    lastLoginDisplay.textContent = `Last login: ${user.lastLogin || 'never'}`;
+
+    if (!history.length) {
+      activityLog.innerHTML = '<div class="activity-item">No activity available yet.</div>';
+      return;
+    }
+
+    activityLog.innerHTML = history.slice(0, 5).map(entry => `
+      <div class="activity-item">
+        ${entry}
+      </div>
+    `).join('');
+  }
+
+  function populateProgramOptions(selectedDept, selectedProgram = '') {
+    programSelect.innerHTML = '<option value="">Select program</option>';
+    if (!selectedDept || !courseMap[selectedDept]) {
+      programSelect.disabled = true;
+      return;
+    }
+
+    courseMap[selectedDept].programs.forEach(program => {
+      const option = document.createElement('option');
+      option.value = program.toLowerCase().replace(/\s+/g, '_');
+      option.textContent = program;
+      if (option.value === selectedProgram) option.selected = true;
+      programSelect.appendChild(option);
+    });
+    programSelect.disabled = false;
+  }
+
+  function loadProfile() {
+    const user = getUserFromStorage();
+    if (!user || Object.keys(user).length === 0) return;
+
+    const fullName = [user.firstName, user.lastName].filter(Boolean).join(' ') || user.fullName || '';
+    const fnEl = document.getElementById('fullName');
+    if (fnEl && (!fnEl.value || fnEl.value.trim() === '')) fnEl.value = fullName;
+
+    const sidEl = document.getElementById('studentId');
+    if (sidEl && (!sidEl.value || sidEl.value.trim() === '')) sidEl.value = user.studentId || '';
+
+    const emailEl = document.getElementById('email');
+    if (emailEl && (!emailEl.value || emailEl.value.trim() === '')) emailEl.value = user.email || '';
+
+    const phoneEl = document.getElementById('phone');
+    if (phoneEl && (!phoneEl.value || phoneEl.value.trim() === '')) phoneEl.value = user.phone || '';
+
+    const dobEl = document.getElementById('dob');
+    if (dobEl && (!dobEl.value || dobEl.value.trim() === '')) dobEl.value = user.dob || '';
+    if (user.dept) {
+      deptSelect.value = user.dept;
+      populateProgramOptions(user.dept, user.program);
+    }
+    document.getElementById('currentRole').value = user.role || user.accountType || 'Student';
+    avatarImg.src = user.profile_image || user.avatar || defaultAvatar;
+    const greetingElement = document.getElementById('welcomeGreeting');
+    if (greetingElement) {
+      const displayName = fullName || 'Student';
+      greetingElement.textContent = `Welcome back, ${displayName}!`;
+    }
+    updateActivityPanel(user);
+  }
+
+  photoUpload.addEventListener('change', function(e){
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) return alert('Please choose an image file.');
+    const reader = new FileReader();
+    reader.onload = () => {
+      avatarImg.src = reader.result;
+      const user = getUserFromStorage();
+      user.profile_image = reader.result;
+      saveUserToStorage(user);
+      user.activityHistory = user.activityHistory || [];
+      user.activityHistory.unshift(`Updated profile photo on ${new Date().toLocaleString()}`);
+      user.activityHistory = user.activityHistory.slice(0, 5);
+      saveUserToStorage(user);
+      updateActivityPanel(user);
+    };
+    reader.readAsDataURL(file);
+  });
+
+  removeBtn.addEventListener('click', () => {
+    avatarImg.src = defaultAvatar;
+    photoUpload.value = "";
+    const user = getUserFromStorage();
+    user.profile_image = '';
+    user.avatar = '';
+    user.activityHistory = user.activityHistory || [];
+    user.activityHistory.unshift(`Removed profile photo on ${new Date().toLocaleString()}`);
+    user.activityHistory = user.activityHistory.slice(0, 5);
+    saveUserToStorage(user);
+    updateActivityPanel(user);
+  });
+
+  // Edit mode functions
+  function enableEditMode() {
+    // take a snapshot of current values to allow cancel
+    window.__profileSnapshot = {};
+    const fields = ['fullName','studentId','email','phone','dob','dept','program','currentRole'];
+    fields.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) window.__profileSnapshot[id] = el.value;
+    });
+    // avatar
+    window.__profileSnapshot.avatar = avatarImg.src;
+
+    const inputs = document.querySelectorAll('#profileForm input, #profileForm select');
+    inputs.forEach(input => input.disabled = false);
+
+    document.getElementById('profileForm').classList.add('edit-mode');
+    document.getElementById('editProfileBtn').style.display = 'none';
+    document.getElementById('actionButtons').style.display = 'flex';
+    document.getElementById('photoButtons').style.display = 'flex';
+
+    // focus first editable field for quick editing
+    const firstField = document.getElementById('fullName');
+    if (firstField) { firstField.focus(); firstField.select(); }
+  }
+
+  function disableEditMode() {
+    const inputs = document.querySelectorAll('#profileForm input, #profileForm select');
+    inputs.forEach(input => input.disabled = true);
+    
+    document.getElementById('profileForm').classList.remove('edit-mode');
+    document.getElementById('editProfileBtn').style.display = 'inline-flex';
+    document.getElementById('actionButtons').style.display = 'none';
+    document.getElementById('photoButtons').style.display = 'none';
+  }
+
+  function cancelEdit() {
+    // restore from snapshot if available
+    const snap = window.__profileSnapshot || null;
+    if (snap) {
+      Object.keys(snap).forEach(k => {
+        const el = document.getElementById(k);
+        if (el) el.value = snap[k];
+      });
+      if (snap.avatar) avatarImg.src = snap.avatar;
+    }
+    disableEditMode();
+  }
+
+  function saveProfile() {
+    const saveBtn = document.getElementById('saveProfileBtn');
+    const fullName = document.getElementById('fullName').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const dob = document.getElementById('dob').value;
+    const dept = deptSelect.value;
+    const program = programSelect.value;
+
+    if (!fullName || !email || !phone) {
+      alert('Please fill in all required fields.');
+      return;
+    }
+
+    const user = getUserFromStorage();
+    const nameParts = fullName.split(/\s+/);
+    user.firstName = nameParts[0] || user.firstName || '';
+    user.lastName = nameParts.slice(1).join(' ') || user.lastName || '';
+    user.surname = nameParts.length > 1 ? nameParts[nameParts.length - 1] : user.surname || nameParts[0];
+    user.fullName = fullName;
+    user.email = email;
+    user.phone = phone;
+    user.dob = dob;
+    user.dept = dept;
+    user.program = program;
+    user.activityHistory = user.activityHistory || [];
+    user.activityHistory.unshift(`Updated profile information on ${new Date().toLocaleString()}`);
+    user.activityHistory = user.activityHistory.slice(0, 5);
+    saveUserToStorage(user);
+
+    // Add/update request entry to history
+    try {
+      const requests = JSON.parse(localStorage.getItem('requests') || '[]');
+      const profileUpdateId = 'PROFILE-UPDATE-' + user.studentId + '-' + new Date().getTime();
+      
+      const profileUpdateRequest = {
+        id: profileUpdateId,
+        type: 'Profile Update',
+        date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' }),
+        status: 'ready',
+        studentId: user.studentId,
+        studentName: fullName,
+        fullName: fullName,
+        submittedAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        handledBy: 'Student Self-Service'
+      };
+      
+      requests.unshift(profileUpdateRequest);
+      localStorage.setItem('requests', JSON.stringify(requests));
+    } catch (error) {
+      console.warn('Could not update history:', error);
+    }
+
+    saveBtn.textContent = 'Saving...';
+    saveBtn.disabled = true;
+
+    setTimeout(() => {
+      saveBtn.innerHTML = '<i class="fa-solid fa-check"></i> Save Changes';
+      saveBtn.disabled = false;
+      const msg = document.getElementById('saveMessage');
+      if (msg) {
+        msg.textContent = 'Profile updated successfully.';
+        msg.style.display = 'block';
+        setTimeout(() => { msg.style.display = 'none'; }, 3000);
+      } else {
+        alert('Profile updated successfully!');
+      }
+      disableEditMode();
+      updateActivityPanel(user);
+    }, 750);
+  }
+
+  // Department → Program cascading dropdown logic
+  const deptSelect = document.getElementById("dept");
+  const programSelect = document.getElementById("program");
+
+  const courseMap = {
+    cafnr: {
+      programs: [
+        "Bachelor of Science in Agribusiness",
+        "Bachelor of Science in Agriculture",
+        "Bachelor of Science in Fisheries",
+        "Bachelor of Science in Forestry"
+      ]
+    },
+    cac: {
+      programs: [
+        "Bachelor of Arts in English Language Studies",
+        "Bachelor of Arts in Literature and Cultural Studies",
+        "Bachelor of Arts major in Political Science",
+        "Bachelor of Arts major in Public Administration",
+        "Bachelor of Arts major in Sociology",
+        "Bachelor of Science in Community Development",
+        "Bachelor of Science in Criminology",
+        "Bachelor of Science in Development Communication"
+      ]
+    },
+    cba: {
+      programs: [
+        "Bachelor of Science in Accountancy",
+        "Bachelor of Science in Business Administration",
+        "Bachelor of Science in Business Economics",
+        "Bachelor of Science in Entrepreneurship",
+        "Bachelor of Science in Hospitality Management"
+      ]
+    },
+    coe: {
+      programs: [
+        "Bachelor of Engineering Technology",
+        "Bachelor of Science in Agricultural and Biosystems Engineering",
+        "Bachelor of Science in Civil Engineering",
+        "Bachelor of Science in Electrical Engineering",
+        "Bachelor of Science in Mechanical Engineering"
+      ]
+    },
+    col: {
+      programs: ["Bachelor of Laws"]
+    },
+    coed: {
+      programs: [
+        "Bachelor of Elementary Education",
+        "Bachelor of Elementary Technology and Livelihood Education",
+        "Bachelor of Secondary Education"
+      ]
+    },
+    cnahs: {
+      programs: [
+        "Bachelor of Science in Nursing",
+        "Bachelor of Science in Radiologic Technology"
+      ]
+    },
+    cos: {
+      programs: [
+        "Bachelor of Science in Biology",
+        "Bachelor of Science in Chemistry",
+        "Bachelor of Science in Environmental Science",
+        "Bachelor of Science in Information Technology",
+        "Bachelor of Science in Marine Biology",
+        "Bachelor of Science in Mathematics"
+      ]
+    },
+    cvm: {
+      programs: [
+        "Bachelor of Science in Meat Technology",
+        "Doctor of Veterinary Medicine"
+      ]
+    }
+  };
+
+  deptSelect.addEventListener("change", function () {
+    populateProgramOptions(this.value);
+  });
+
+  function logout() {
+    window.location.href = 'login.html';
+  }
+
+  const ADMIN_SECRET_CODE = 'ADMIN2026';
+
+  function requestAdminAccess() {
+    const code = prompt('Enter admin access code:');
+    if (code === null) return; // user cancelled
+
+    if (code.trim() === ADMIN_SECRET_CODE) {
+      const user = JSON.parse(localStorage.getItem('user')) || {};
+      user.role = 'admin';
+      localStorage.setItem('user', JSON.stringify(user));
+      alert('Admin access granted. Redirecting to admin dashboard...');
+      window.location.href = 'admin-dashboard.html';
+      return;
+    }
+
+    alert('Invalid admin access code.');
+  }
+
+  // Initialize dark mode if enabled in localStorage and load profile fields
+  window.addEventListener('DOMContentLoaded', () => {
+    try {
+      const darkModeEnabled = localStorage.getItem('pref-darkMode') === '1';
+      if (darkModeEnabled) {
+        document.body.classList.add('dark-mode');
+      }
+    } catch(e) {}
+
+    loadProfile();
+    // Ensure edit button is bound via JS (in addition to inline onclick)
+    const editBtn = document.getElementById('editProfileBtn');
+    if (editBtn) editBtn.addEventListener('click', enableEditMode);
+    // presence heartbeat (server-backed when available)
+    try { startPresenceHeartbeat(); } catch(e){ console.warn('presence init failed', e); }
+  });
+
+  // Presence / heartbeat client (POST to server, fallback to localStorage)
+  const PRESENCE_INTERVAL = 30000; // send heartbeat every 30s
+  const PRESENCE_CHECK_INTERVAL = 10000; // check presence every 10s
+  const PRESENCE_THRESHOLD_MS = 60000; // consider online if lastSeen < 60s
+
+  function getCurrentUserId() {
+    const u = getUserFromStorage() || {};
+    return (u.studentId || u.email || u.fullName || 'guest').toString();
+  }
+
+  async function sendHeartbeat() {
+    const userId = getCurrentUserId();
+    const payload = { userId };
+    try {
+      const res = await fetch('http://localhost:3000/presence/heartbeat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if (res.ok) {
+        const data = await res.json();
+        localStorage.setItem('lastSeenServer', data.lastSeen);
+        updatePresenceUI(true, data.lastSeen);
+        return;
+      }
+    } catch (e) {
+      // server unreachable
+    }
+    // fallback: write local timestamp
+    const now = new Date().toISOString();
+    localStorage.setItem('lastSeenFallback', now);
+    updatePresenceUI(true, now + ' (local)');
+  }
+
+  async function checkPresence() {
+    const userId = getCurrentUserId();
+    try {
+      const res = await fetch('http://localhost:3000/presence/' + encodeURIComponent(userId));
+      if (res.ok) {
+        const data = await res.json();
+        updatePresenceUI(!!data.online, data.lastSeen);
+        return;
+      }
+    } catch (e) {
+      // ignore
+    }
+    // fallback: use localStorage timestamps
+    const last = localStorage.getItem('lastSeenFallback') || localStorage.getItem('lastSeenServer');
+    if (!last) return updatePresenceUI(false, 'never');
+    const lastMs = new Date(last).getTime();
+    const online = (Date.now() - lastMs) < PRESENCE_THRESHOLD_MS;
+    updatePresenceUI(online, last);
+  }
+
+  function updatePresenceUI(online, lastSeen) {
+    const el = document.getElementById('presenceStatus');
+    if (!el) return;
+    if (online) {
+      el.textContent = 'Status: Online';
+      el.style.color = 'green';
+    } else {
+      el.textContent = lastSeen && lastSeen !== 'never' ? `Last seen: ${new Date(lastSeen).toLocaleString()}` : 'Status: Offline';
+      el.style.color = '';
+    }
+  }
+
+  function startPresenceHeartbeat() {
+    // send initial heartbeat and schedule periodic sends/checks
+    sendHeartbeat();
+    checkPresence();
+    setInterval(sendHeartbeat, PRESENCE_INTERVAL);
+    setInterval(checkPresence, PRESENCE_CHECK_INTERVAL);
+  }
+</script>
+</body>
+</html>
+

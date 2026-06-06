@@ -1,0 +1,587 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>IDEase Portal — Admin Settings</title>
+  <!-- FONT AWESOME ICONS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root{
+      --sidebar-width: 280px;
+      --navy: #0f2340;
+      --muted: #6b7280;
+      --card-bg: #ffffff;
+      --accent: #1e56d6;
+      --bg: #f5f7fb;
+      --text-primary: #000000;
+      --text-secondary: #6b7280;
+      --input-bg: #fbfdff;
+      --input-border: #e6eefc;
+      --radius: 14px;
+      --shadow: 0 6px 18px rgba(11,18,35,0.06);
+      --max-main-width: 920px;
+      --gap: 20px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", Arial;
+    }
+
+    body.dark-mode {
+      --card-bg: #2a2a2a;
+      --bg: #1a1a1a;
+      --text-primary: #ffffff;
+      --text-secondary: #aaaaaa;
+      --input-bg: #333333;
+      --input-border: #444444;
+      --muted: #aaaaaa;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Inter", Arial, sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      display: flex;
+      min-height: 100vh;
+      height: 100vh;
+      overflow: hidden;
+      color: var(--text-primary);
+    }
+
+    .main {
+      flex: 1;
+      min-height: 100vh;
+      height: 100vh;
+      padding: 28px 32px;
+      overflow-y: auto;
+      background: var(--bg);
+      position: relative;
+      color: var(--text-primary);
+    }
+
+    .main::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    .main::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .main::-webkit-scrollbar-thumb {
+      background: rgba(15, 35, 64, 0.18);
+      border-radius: 10px;
+    }
+
+    .sidebar {
+      width: 220px;
+      height: 100vh;
+      background: #0a1a33;
+      color: white;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      border-radius: 0 20px 20px 0;
+      box-shadow: 4px 0 20px rgba(0,0,0,0.4);
+      overflow-y: auto;
+    }
+
+    body.dark-mode .sidebar {
+      background: #101827;
+      color: #f3f4f6;
+      box-shadow: 4px 0 20px rgba(0,0,0,0.35);
+    }
+
+    body.dark-mode .sidebar .logo i,
+    body.dark-mode .sidebar .logo h2,
+    body.dark-mode .sidebar .logo p {
+      color: #f3f4f6;
+    }
+
+    body.dark-mode .menu-item {
+      color: #d6e0ff;
+      background: transparent;
+    }
+
+    body.dark-mode .menu-item:hover,
+    body.dark-mode .menu-item.active {
+      background: rgba(255,255,255,0.1);
+    }
+
+    body.dark-mode .menu-item.active {
+      color: #ffffff;
+    }
+
+    .logo {
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    .logo h2 {
+      font-size: 24px;
+      margin: 10px 0 0;
+      font-weight: 700;
+    }
+
+    .sidebar .logo i {
+      font-size: 34px;
+      color: #fff;
+    }
+
+    .logo p {
+      font-size: 12px;
+      color: #b9c6e0;
+      margin-top: 4px;
+    }
+
+    .menu {
+      margin-top: 20px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .menu-item {
+      padding: 12px 15px;
+      margin-bottom: 8px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #d9e3f5;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .menu-item:hover,
+    .menu-item.active {
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+    }
+
+    .main {
+      flex: 1;
+      min-height: 100vh;
+      padding: 28px 32px;
+      overflow-y: auto;
+      background: var(--bg);
+      position: relative;
+      color: var(--text-primary);
+    }
+
+    .header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .page-title {
+      font-size: 29px;
+      font-weight: 700;
+    }
+
+    .header-controls {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .icon-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: white;
+      border: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+    }
+
+    .container {
+      width: 100%;
+      max-width: none;
+      margin: 0;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+      margin-top: 20px;
+    }
+
+    .card h3 {
+      margin: 0 0 12px 0;
+      font-size: 15px;
+    }
+
+    .card .muted {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 0;
+      background: var(--accent);
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn.ghost {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid #eef2ff;
+    }
+
+    .prefs-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .pref-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--input-border);
+      background: var(--input-bg);
+    }
+
+    .pref-left {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .small {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .switch {
+      --w:46px;
+      --h:26px;
+      width: var(--w);
+      height: var(--h);
+      border-radius: 999px;
+      background: #e6eefc;
+      position: relative;
+      cursor: pointer;
+      flex-shrink: 0;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.5);
+    }
+
+    .switch .knob {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: white;
+      box-shadow: 0 2px 6px rgba(16,24,40,0.12);
+      transition: all .18s ease;
+    }
+
+    .switch.on {
+      background: linear-gradient(90deg,var(--accent), #3ab0ff);
+    }
+
+    .switch.on .knob {
+      left: calc(var(--w) - 3px - 20px);
+    }
+
+    @media (max-width:1050px){
+      .two-col{grid-template-columns:1fr}
+      .main{padding:20px}
+    }
+
+    .save-wrap {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 8px;
+    }
+
+    .save-btn {
+      background: var(--accent);
+      color: white;
+      padding: 12px 18px;
+      border-radius: 10px;
+      border: 0;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 8px 22px rgba(30,86,214,0.18);
+      transition: transform 0.15s ease, background 0.15s ease;
+    }
+
+    .save-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .save-btn.btn-saved {
+      background: #10b981;
+    }
+
+    .field-note {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    @media (max-width:1050px){
+      .main{padding:20px}
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <div class="logo">
+      <i class="fa-solid fa-graduation-cap"></i>
+      <h2>IDEease Portal</h2>
+      <p>Admin Services</p>
+    </div>
+
+    <div class="menu">
+      <a href="admin-dashboard.html" class="menu-item">
+        <i class="fa-solid fa-chart-pie"></i>
+        Dashboard
+      </a>
+      <a href="admin-dashboard.html#adminRequests" class="menu-item">
+        <i class="fa-solid fa-inbox"></i>
+        Admin Requests
+      </a>
+      <a href="admin-dashboard.html#history" class="menu-item">
+        <i class="fa-solid fa-clock-rotate-left"></i>
+        History
+      </a>
+      <a href="admin-settings.html" class="menu-item active">
+        <i class="fa-solid fa-gear"></i>
+        Settings
+      </a>
+    </div>
+  </div>
+
+  <main class="main">
+    <div class="container">
+      <div class="header-row">
+        <div class="page-title">Admin Settings</div>
+        <div class="header-controls"></div>
+      </div>
+
+      <div class="two-col">
+        <div style="display:flex;flex-direction:column;gap:20px">
+          <section class="card" aria-labelledby="notif-heading">
+            <h3 id="notif-heading">Request Notifications</h3>
+            <div class="muted">Manage the key notifications that drive request handling.</div>
+            <div class="prefs-list">
+              <div class="pref-item">
+                <div class="pref-left">
+                  <div style="font-weight:700">New Request Alerts</div>
+                  <div class="small">Notify admins when a new request is submitted.</div>
+                </div>
+                <div><div class="switch" data-key="alertNewRequest" role="switch" aria-checked="false" tabindex="0"><div class="knob"></div></div></div>
+              </div>
+              <div class="pref-item">
+                <div class="pref-left">
+                  <div style="font-weight:700">Verification Alerts</div>
+                  <div class="small">Notify admins when a request requires verification.</div>
+                </div>
+                <div><div class="switch" data-key="alertVerification" role="switch" aria-checked="false" tabindex="0"><div class="knob"></div></div></div>
+              </div>
+              <div class="pref-item">
+                <div class="pref-left">
+                  <div style="font-weight:700">Completion / Rejection Alerts</div>
+                  <div class="small">Notify admins when a request is completed or rejected.</div>
+                </div>
+                <div><div class="switch" data-key="alertFinalStatus" role="switch" aria-checked="false" tabindex="0"><div class="knob"></div></div></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="card" aria-labelledby="management-heading">
+            <h3 id="management-heading">Request Management</h3>
+            <div class="muted">Control how requests are routed and accepted.</div>
+            <div class="prefs-list">
+              <div class="pref-item">
+                <div class="pref-left">
+                  <div style="font-weight:700">Auto-assign Requests</div>
+                  <div class="small">Automatically assign incoming requests to available admins.</div>
+                </div>
+                <div><div class="switch" data-key="autoAssign" role="switch" aria-checked="false" tabindex="0"><div class="knob"></div></div></div>
+              </div>
+              <div class="pref-item">
+                <div class="pref-left">
+                  <div style="font-weight:700">Maintenance Mode</div>
+                  <div class="small">Stop new request submissions while maintenance is active.</div>
+                </div>
+                <div><div class="switch" data-key="maintenanceMode" role="switch" aria-checked="false" tabindex="0"><div class="knob"></div></div></div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:20px">
+          <section class="card" aria-labelledby="accounts-heading">
+            <h3 id="accounts-heading">User Accounts</h3>
+            <div class="muted">Manage admin defaults for student account handling.</div>
+            <div class="prefs-list">
+              <div class="pref-item">
+                <div class="pref-left">
+                  <div style="font-weight:700">Account Activation Default</div>
+                  <div class="small">Automatically activate accounts when approved.</div>
+                </div>
+                <div><div class="switch" data-key="accountActivation" role="switch" aria-checked="false" tabindex="0"><div class="knob"></div></div></div>
+              </div>
+              <div class="pref-item">
+                <div class="pref-left">
+                  <div style="font-weight:700">Role Assignment</div>
+                  <div class="small">Allow admins to assign user roles during request processing.</div>
+                </div>
+                <div><div class="switch" data-key="roleAssignment" role="switch" aria-checked="false" tabindex="0"><div class="knob"></div></div></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="card" aria-labelledby="display-heading">
+            <h3 id="display-heading">Display</h3>
+            <div class="muted">Simple theme control for the admin portal.</div>
+            <div class="prefs-list" style="margin-top:12px;">
+              <div class="pref-item">
+                <div class="pref-left">
+                  <div style="font-weight:700">Dark Mode</div>
+                  <div class="small">Enable dark theme for the admin portal.</div>
+                </div>
+                <div><div class="switch" data-key="darkMode" role="switch" aria-checked="false" tabindex="0"><div class="knob"></div></div></div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <div class="save-wrap" style="margin-top:24px;">
+        <button class="save-btn" type="button">Save / Apply</button>
+      </div>
+      <div id="lastSavedTimestamp" class="field-note" style="margin-top:12px;">Preferences not saved yet.</div>
+    </div>
+  </main>
+
+  <script>
+    const switches = document.querySelectorAll('.switch');
+    switches.forEach(s => {
+      s.addEventListener('click', () => {
+        toggleSwitch(s);
+      });
+      s.addEventListener('keydown', (ev) => {
+        if (ev.key === 'Enter' || ev.key === ' ') {
+          ev.preventDefault();
+          toggleSwitch(s);
+        }
+      });
+    });
+
+    function updateLastSavedIndicator(timestamp) {
+      const lastSavedTimestamp = document.getElementById('lastSavedTimestamp');
+      if (lastSavedTimestamp) {
+        lastSavedTimestamp.textContent = `Last saved: ${timestamp.toLocaleString()}`;
+      }
+    }
+
+    function toggleSwitch(el) {
+      const isOn = el.classList.toggle('on');
+      el.setAttribute('aria-checked', isOn ? 'true' : 'false');
+      const key = el.dataset.key;
+      if (key === 'darkMode') {
+        if (isOn) document.body.classList.add('dark-mode');
+        else document.body.classList.remove('dark-mode');
+      }
+    }
+
+    function savePreferences() {
+      try {
+        switches.forEach(s => {
+          const key = s.dataset.key;
+          const value = s.classList.contains('on') ? '1' : '0';
+          localStorage.setItem('admin-pref-' + key, value);
+          if (key === 'darkMode') {
+            localStorage.setItem('pref-darkMode', value);
+          }
+        });
+        const now = new Date();
+        localStorage.setItem('admin-settings-savedAt', now.toISOString());
+        updateLastSavedIndicator(now);
+        const saveButton = document.querySelector('.save-btn');
+        if (saveButton) {
+          saveButton.textContent = 'Preferences Saved';
+          saveButton.classList.add('btn-saved');
+          setTimeout(() => {
+            saveButton.textContent = 'Save / Apply';
+            saveButton.classList.remove('btn-saved');
+          }, 1500);
+        }
+      } catch (e) {
+        alert('Unable to save preferences at this time.');
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      switches.forEach(s => {
+        const key = s.dataset.key;
+        try {
+          let v = localStorage.getItem('admin-pref-' + key);
+          if (key === 'darkMode' && v === null) {
+            v = localStorage.getItem('pref-darkMode');
+          }
+          if (v === '0') {
+            s.classList.remove('on');
+            s.setAttribute('aria-checked', 'false');
+          }
+          if (v === '1') {
+            s.classList.add('on');
+            s.setAttribute('aria-checked', 'true');
+          }
+          if (key === 'darkMode' && v === '1') {
+            document.body.classList.add('dark-mode');
+          }
+        } catch (e) {}
+      });
+
+      const saveButton = document.querySelector('.save-btn');
+      const lastSavedTimestamp = document.getElementById('lastSavedTimestamp');
+      if (lastSavedTimestamp) {
+        const savedAt = localStorage.getItem('admin-settings-savedAt');
+        if (savedAt) {
+          lastSavedTimestamp.textContent = `Last saved: ${new Date(savedAt).toLocaleString()}`;
+        }
+      }
+
+      if (saveButton) {
+        saveButton.addEventListener('click', savePreferences);
+      }
+    });
+  </script>
+</body>
+</html>

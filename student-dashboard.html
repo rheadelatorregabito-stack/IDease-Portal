@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IDEease Portal - My Requests</title>
+
+    <!-- MAIN CSS -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- FONT AWESOME ICONS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        /* ================= SIDEBAR ================= */
+        .sidebar {
+            width: 220px;
+            height: 100vh;
+            background: #0f2340;
+            color: white;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            border-radius: 0 20px 20px 0;
+            box-shadow: 4px 0 20px rgba(0,0,0,0.25);
+        }
+
+        .logo {
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .logo h2 {
+            font-size: 24px;
+            margin: 10px 0 0;
+        }
+
+        .sidebar .logo i {
+            font-size: 34px;
+            color: #fff;
+        }
+
+        .logo span,
+        .logo p {
+            font-size: 12px;
+            color: #b9c6e0;
+        }
+
+        .menu {
+            margin-top: 20px;
+            flex-grow: 1;
+        }
+
+        .menu-item {
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #d9e3f5;
+            text-decoration: none;
+        }
+
+        .menu-item:hover,
+        .menu-item.active {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .profile-card {
+            background: #12294d;
+            padding: 15px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: auto;
+        }
+
+        .profile-card img {
+            width: 50px;
+            height: 35px;
+            border-radius: 50%;
+        }
+
+        .profile-info p {
+            font-size: 12px;
+            margin: 0;
+            opacity: 0.85;
+        }
+
+        .student-tag {
+            background: #1f3a66;
+            padding: 3px 7px;
+            border-radius: 6px;
+            font-size: 10px;
+            display: inline-block;
+            margin-top: 3px;
+        }
+
+        .cta-hero {
+            background: var(--accent);
+            color: white;
+            border-radius: 18px;
+            padding: 28px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 8px 24px rgba(93, 111, 210, 0.15);
+        }
+
+        .cta-hero h2 {
+            margin: 0 0 8px;
+            font-size: 24px;
+        }
+
+        .cta-hero p {
+            margin: 0;
+            opacity: 0.95;
+            font-size: 14px;
+        }
+
+        .cta-button {
+            background: white;
+            color: var(--accent);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: 0.2s;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 25px;
+        }
+
+        .stat-box {
+            background: var(--card-bg);
+            border-radius: 14px;
+            padding: 18px;
+            border: 1px solid var(--input-border);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: var(--accent);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .stat-content h4 {
+            margin: 0;
+            font-size: 14px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .stat-content .number {
+            margin: 4px 0 0;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .requests-section {
+            background: var(--card-bg);
+            border-radius: 14px;
+            border: 1px solid var(--input-border);
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+        }
+
+        .requests-section h3 {
+            margin: 0 0 18px;
+            font-size: 18px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .requests-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .requests-table thead {
+            background: var(--input-bg);
+            border-bottom: 1px solid var(--input-border);
+        }
+
+        .requests-table th {
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .requests-table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--input-border);
+            color: var(--text-primary);
+        }
+
+        .requests-table tbody tr:hover {
+            background: var(--input-bg);
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .progress-card {
+            background: var(--card-bg);
+            border: 1px solid var(--input-border);
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+        }
+
+        .progress-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .progress-card-header h3 {
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .progress-card-header .progress-status {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .progress-line {
+            background: var(--input-bg);
+            border-radius: 999px;
+            height: 12px;
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 12px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), #4ac0f6);
+            width: 0%;
+            transition: width 0.35s ease;
+        }
+
+        .progress-step-labels {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            font-size: 12px;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        .progress-step-labels span {
+            display: block;
+        }
+
+        /* Grouped new-request banner + button layout */
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .new-request-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: flex-end;
+            max-width: 220px;
+            min-width: 160px;
+        }
+
+        #newRequestBanner {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px 12px;
+            border-radius: 10px;
+            text-align: right;
+            font-size: 13px;
+        }
+
+        .new-request-btn {
+            background: var(--accent);
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 10px;
+            border: none;
+            font-weight: 700;
+            cursor: pointer;
+            min-width: 140px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .new-request-btn.disabled {
+            opacity: 0.6;
+            pointer-events: none;
+            background: #93c5fd;
+            cursor: not-allowed;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-processing {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .status-completed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-rejected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .view-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .view-btn:hover {
+            opacity: 0.9;
+        }
+
+        .no-requests {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+        }
+
+        .no-requests i {
+            font-size: 48px;
+            color: var(--input-border);
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .cta-hero {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .requests-table {
+                font-size: 13px;
+            }
+
+            .requests-table th,
+            .requests-table td {
+                padding: 10px 8px;
+            }
+            body{height:auto}
+            .sidebar{width:100%;height:auto;border-radius:0;flex-direction:row;padding:10px;position:sticky;top:0;z-index:100}
+            .logo{margin-bottom:0}
+            .logo h2{font-size:18px}
+            .menu{flex-direction:row;margin-top:0;gap:5px}
+            .menu-item{padding:8px 12px;font-size:12px;margin-bottom:0}
+            .main{padding:15px}
+            .stats-grid{grid-template-columns:repeat(2,1fr);gap:12px}
+            .stat-box{padding:12px}
+        }
+        @media (max-width:600px){
+            .sidebar{flex-direction:column;height:auto;padding:10px;border-radius:0}
+            .logo{margin-bottom:15px;display:flex;align-items:center;gap:10px}
+            .logo h2{font-size:16px;margin:0}
+            .logo i{font-size:24px}
+            .menu{flex-direction:column;gap:0}
+            .menu-item{padding:10px 12px;font-size:11px}
+            .main{padding:12px}
+            .page-title{font-size:18px}
+            .stats-grid{grid-template-columns:1fr;gap:10px}
+            .stat-box{padding:10px;font-size:12px}
+            .stat-box h4{font-size:14px}
+            .requests-table{font-size:11px;width:100%;overflow-x:auto;display:block}
+            .requests-table th,.requests-table td{padding:8px 5px;font-size:10px}
+            .cta-hero{padding:15px;text-align:center}
+            .cta-hero h2{font-size:18px}
+            .cta-hero p{font-size:12px}
+            .cta-btn{padding:10px 20px;font-size:12px}
+            .progress-card{padding:12px}
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <i class="fa-solid fa-graduation-cap"></i>
+            <h2>IDEease Portal</h2>
+            <p>Student Services</p>
+        </div>
+        <div class="menu">
+            <a href="student-dashboard.html">
+                <div class="menu-item active">
+                    <i class="fa-solid fa-house"></i>
+                    Dashboard
+                </div>
+            </a>
+
+            <a href="help center.html">
+                <div class="menu-item">
+                    <i class="fa-solid fa-headset"></i>
+                    Help & Support
+                </div>
+            </a>
+
+            <a href="profile.html">
+                <div class="menu-item">
+                    <i class="fa-solid fa-user"></i>
+                    Profile
+                </div>
+            </a>
+
+            <a href="setting.html">
+                <div class="menu-item">
+                    <i class="fa-solid fa-gear"></i>
+                    Settings
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <div class="main">
+        <div class="header">
+            <div>
+                <h1 id="welcomeTitle">My Requests</h1>
+                <p id="welcomeMessage">Welcome! View and track your student ID requests below.</p>
+            </div>
+
+            <div class="header-right">
+                <div class="new-request-group">
+                    <div id="newRequestBanner" style="display:none;background:#fff4e5;border:1px solid #ffd8a8;color:#92400e;font-weight:700;">You have already submitted a request. Please wait for the result before sending another.</div>
+                    <button id="newRequestBtn" class="new-request-btn">
+                        <i class="fa-solid fa-plus"></i> New Request
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="cta-hero">
+            <div>
+                <h2>Need a Student ID?</h2>
+                <p>Submit a new request to get your student ID or manage existing ones.</p>
+            </div>
+            <div class="stat-box">
+                <div class="stat-icon">
+                    <i class="fa-solid fa-clock"></i>
+                </div>
+                <div class="stat-content">
+                    <h4>Pending</h4>
+                    <div class="number" id="statPending">0</div>
+                </div>
+            </div>
+
+            <div class="stat-box">
+                <div class="stat-icon">
+                    <i class="fa-solid fa-spinner"></i>
+                </div>
+                <div class="stat-content">
+                    <h4>Processing</h4>
+                    <div class="number" id="statProcessing">0</div>
+                </div>
+            </div>
+
+            <div class="stat-box">
+                <div class="stat-icon">
+                    <i class="fa-solid fa-check-circle"></i>
+                </div>
+                <div class="stat-content">
+                    <h4>Completed</h4>
+                    <div class="number" id="statCompleted">0</div>
+                </div>
+            </div>
+
+            <div class="stat-box">
+                <div class="stat-icon">
+                    <i class="fa-solid fa-ban"></i>
+                </div>
+                <div class="stat-content">
+                    <h4>Rejected</h4>
+                    <div class="number" id="statRejected">0</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="progress-card" id="progressCard">
+            <div class="progress-card-header">
+                <h3>Latest Request Progress</h3>
+                <div class="progress-status" id="progressCurrentStatus">No active request</div>
+            </div>
+            <div class="progress-line" aria-hidden="true">
+                <div class="progress-fill" id="progressFillTracker"></div>
+            </div>
+            <div class="progress-step-labels">
+                <span>Submitted</span>
+                <span>Verification</span>
+                <span>Processing</span>
+                <span>Completed</span>
+            </div>
+        </div>
+
+        <div class="requests-section">
+            <h3>
+                <i class="fa-solid fa-list"></i>
+                Your Requests
+            </h3>
+
+      <div id="requestsContainer">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const BACKEND_BASE_URL = 'http://localhost:3000';
+        let studentWs = null;
+
+        // Load dark mode preference on page load
+        if (localStorage.getItem('pref-darkMode') === '1') {
+            document.body.classList.add('dark-mode');
+        }
+
+        function getCurrentUser() {
+            try {
+                return JSON.parse(localStorage.getItem('user')) || {};
+            } catch (e) {
+                return {};
+            }
+        }
+
+        function verifyStudentAccess() {
+            const user = getCurrentUser();
+            if (!user || !user.studentId) {
+                window.location.href = 'login.html';
+                return null;
+            }
+            return user;
+        }
+
+        function getStatusCategory(status) {
+            const normalized = (status || '').toString().toLowerCase();
+            if (normalized === 'submitted') return 'pending';
+            if (normalized === 'pending' || normalized === 'verification') return 'pending';
+            if (normalized === 'processing') return 'processing';
+            if (normalized === 'ready' || normalized === 'completed') return 'completed';
+            if (normalized === 'rejected') return 'rejected';
+            return 'pending';
+        }
+
+        function getStatusBadgeClass(status) {
+            const category = getStatusCategory(status);
+            return `status-${category}`;
+        }
+
+        function getStatusLabel(status) {
+            const normalized = (status || '').toString().toLowerCase();
+            if (normalized === 'submitted') return 'Submitted';
+            if (normalized === 'pending' || normalized === 'verification') return 'Pending';
+            if (normalized === 'processing') return 'Processing';
+            if (normalized === 'ready' || normalized === 'completed') return 'Completed';
+            if (normalized === 'rejected') return 'Rejected';
+            return status ? status.charAt(0).toUpperCase() + status.slice(1) : 'Unknown';
+        }
+
+        function getStatusIcon(status) {
+            const category = getStatusCategory(status);
+            return {
+                submitted: 'fa-circle-dot',
+                pending: 'fa-clock',
+                processing: 'fa-spinner',
+                completed: 'fa-check-circle',
+                rejected: 'fa-ban'
+            }[category] || 'fa-circle';
+        }
+
+        function getLocalStudentRequests(studentId) {
+            try {
+                const stored = localStorage.getItem('requests');
+                const requests = stored ? JSON.parse(stored) : [];
+                return requests.filter(req => req.studentId === studentId.toString());
+            } catch (e) {
+                return [];
+            }
+        }
+
+        const HIDDEN_REQUEST_IDS = new Set(['REQ-1780024153165']);
+
+        function dedupeRequests(requests) {
+            const map = new Map();
+            (Array.isArray(requests) ? requests : []).forEach(req => {
+                if (HIDDEN_REQUEST_IDS.has(req.id)) {
+                    return;
+                }
+                const key = req.id || `${req.studentId || ''}|${(req.fullName || req.studentName || req.type || '').toString().trim()}|${req.createdAt || req.submittedAt || req.date || ''}`;
+                const existing = map.get(key);
+                const currentTime = new Date(req.updatedAt || req.createdAt || req.submittedAt || req.date || 0).getTime();
+                const existingTime = existing ? new Date(existing.updatedAt || existing.createdAt || existing.submittedAt || existing.date || 0).getTime() : 0;
+                if (!existing || currentTime >= existingTime) {
+                    map.set(key, req);
+                }
+            });
+            return Array.from(map.values());
+        }
+
+async function fetchStudentRequests(studentId) {
+    try {
+        const response = await fetch(`/api/student/requests?userId=${encodeURIComponent(studentId)}`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch student requests from backend');
+        }
+        const data = await response.json();
+        if (!Array.isArray(data)) {
+            throw new Error('Unexpected response format for student requests');
+        }
+        return dedupeRequests(data);
+    } catch (error) {
+        console.warn('Backend fetch failed, falling back to local request store:', error);
+        return dedupeRequests(getLocalStudentRequests(studentId));
+    }
+}
+
+        async function loadStudentRequests() {
+            const user = verifyStudentAccess();
+            if (!user) return;
+
+            const userSurname = user.surname || user.lastName || user.firstName || 'Student';
+            document.getElementById('welcomeTitle').textContent = `My Requests`;
+            document.getElementById('welcomeMessage').textContent =
+                `Welcome back, ${userSurname}! View and track your student ID requests below.`;
+
+            const studentRequests = await fetchStudentRequests(user.studentId);
+            renderStudentRequests(studentRequests);
+            // Enforce frontend single-active-request rule: disable New Request if any active request exists
+            try {
+                const hasActive = Array.isArray(studentRequests) && studentRequests.some(r => {
+                    const s = (r.status || '').toString().toLowerCase();
+                    return ['submitted', 'verification', 'processing', 'ready'].includes(s);
+                });
+                const newBtn = document.getElementById('newRequestBtn');
+                const banner = document.getElementById('newRequestBanner');
+                if (hasActive) {
+                    if (newBtn) {
+                        newBtn.disabled = true;
+                        newBtn.classList.add('disabled');
+                    }
+                    if (banner) banner.style.display = 'block';
+                } else {
+                    if (newBtn) {
+                        newBtn.disabled = false;
+                        newBtn.classList.remove('disabled');
+                    }
+                    if (banner) banner.style.display = 'none';
+                }
+            } catch (e) {
+                console.warn('Could not evaluate active request state', e);
+            }
+        }
+
+        function renderStudentRequests(studentRequests) {
+            const counts = {
+                pending: 0,
+                processing: 0,
+                completed: 0,
+                rejected: 0
+            };
+
+            const now = new Date();
+            const requests = dedupeRequests(Array.isArray(studentRequests) ? studentRequests : []);
+
+            requests.forEach(req => {
+                const category = getStatusCategory(req.status);
+                if (counts.hasOwnProperty(category)) {
+                    counts[category]++;
+                }
+            });
+
+            document.getElementById('statPending').textContent = counts.pending;
+            document.getElementById('statProcessing').textContent = counts.processing;
+            document.getElementById('statCompleted').textContent = counts.completed;
+            document.getElementById('statRejected').textContent = counts.rejected;
+
+            if (requests.length === 0) {
+                document.getElementById('requestsContainer').innerHTML = '';
+                updateProgressTracker(null);
+                return;
+            }
+
+            let tableHTML = `
+                <table class="requests-table">
+                    <thead>
+                        <tr>
+                            <th>Request ID</th>
+                            <th>Type</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            requests.forEach(req => {
+                const dateValue = req.date || req.createdAt || req.submittedAt || now.toISOString();
+                const displayDate = new Date(dateValue).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' });
+                const statusClass = getStatusBadgeClass(req.status);
+                const statusIcon = getStatusIcon(req.status);
+                const statusLabel = getStatusLabel(req.status);
+
+                tableHTML += `
+                    <tr>
+                        <td><strong>${req.id || 'N/A'}</strong></td>
+                        <td>${req.type || 'Student ID Request'}</td>
+                        <td>${displayDate}</td>
+                        <td>
+                            <span class="status-badge ${statusClass}">
+                                <i class="fa-solid ${statusIcon}"></i>
+                                ${statusLabel}
+                            </span>
+                        </td>
+                        
+                    </tr>
+                `;
+            });
+
+            tableHTML += `
+                    </tbody>
+                </table>
+            `;
+
+            document.getElementById('requestsContainer').innerHTML = tableHTML;
+            const latestRequest = getLatestRequest(requests);
+            updateProgressTracker(latestRequest);
+        }
+
+        function getLatestRequest(requests) {
+            if (!Array.isArray(requests) || requests.length === 0) {
+                return null;
+            }
+            return requests.slice().sort((a, b) => {
+                const aTime = new Date(a.updatedAt || a.createdAt || a.submittedAt || a.date).getTime();
+                const bTime = new Date(b.updatedAt || b.createdAt || b.submittedAt || b.date).getTime();
+                return bTime - aTime;
+            })[0] || null;
+        }
+
+        function getProgressValue(status) {
+            const normalized = (status || '').toString().toLowerCase();
+            if (normalized === 'submitted') return 25;
+            if (normalized === 'verification' || normalized === 'pending') return 50;
+            if (normalized === 'processing') return 75;
+            if (normalized === 'ready' || normalized === 'completed') return 100;
+            if (normalized === 'rejected') return 100;
+            return 0;
+        }
+
+        function updateProgressTracker(request) {
+            const statusText = document.getElementById('progressCurrentStatus');
+            const progressFill = document.getElementById('progressFillTracker');
+            if (!request) {
+                statusText.textContent = 'No active request';
+                progressFill.style.width = '0%';
+                return;
+            }
+
+            const statusLabel = getStatusLabel(request.status || request.status);
+            const progressValue = getProgressValue(request.status);
+            statusText.textContent = `${request.id || 'Request'} — ${statusLabel}`;
+            progressFill.style.width = `${progressValue}%`;
+
+            if ((request.status || '').toString().toLowerCase() === 'rejected') {
+                statusText.textContent = `${request.id || 'Request'} — Rejected`;
+                progressFill.style.background = '#f8d7da';
+            } else {
+                progressFill.style.background = 'linear-gradient(90deg, var(--accent), #4ac0f6)';
+            }
+        }
+
+        function viewRequestDetails(requestId) {
+            alert(`Viewing details for ${requestId}\n\nFull request details would be displayed here.`);
+        }
+
+        function connectStudentWebSocket() {
+            const wsProtocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+            const wsHost = window.location.hostname || 'localhost';
+            const wsPort = 3000;
+            const wsUrl = `${wsProtocol}://${wsHost}:${wsPort}/ws`;
+
+            studentWs = new WebSocket(wsUrl);
+
+            studentWs.onopen = () => {
+                console.log('[Student WS] Connected to real-time updates');
+                const user = getCurrentUser();
+                if (user && user.studentId) {
+                    studentWs.send(JSON.stringify({ type: 'identify', role: 'student', userId: user.studentId }));
+                }
+            }; 
+
+            studentWs.onmessage = (event) => {
+                try {
+                    const data = JSON.parse(event.data);
+                    if (!data) return;
+                    const user = getCurrentUser();
+                    if (!user || !user.studentId) return;
+                    if (data.userId && data.userId.toString() !== user.studentId.toString()) return;
+
+                    const isStatusEvent = (data.type && data.type.startsWith('request.')) || data.type === 'requestStatusUpdate' || data.event === 'requestStatusUpdate';
+                    if (isStatusEvent) {
+                        console.log('[Student WS] Request update received:', data);
+                        loadStudentRequests();
+                    }
+                } catch (error) {
+                    console.warn('[Student WS] Invalid message', error);
+                }
+            };
+
+            studentWs.onclose = () => {
+                console.log('[Student WS] Disconnected, reconnecting in 3s');
+                setTimeout(connectStudentWebSocket, 3000);
+            };
+
+            studentWs.onerror = (error) => {
+                console.warn('[Student WS] Error:', error);
+            };
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadStudentRequests();
+            connectStudentWebSocket();
+            const newBtn = document.getElementById('newRequestBtn');
+            if (newBtn) {
+                newBtn.addEventListener('click', (e) => {
+                    if (newBtn.disabled) return;
+                    // Navigate to the submission form
+                    window.location.href = 'submit a req .html';
+                });
+            }
+        });
+
+    </script>
+</body>
+</html>

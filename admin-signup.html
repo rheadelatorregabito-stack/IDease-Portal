@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Registration - SRS Portal</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="assets/common.css">
+    <style>
+        :root {
+            --primary-color: #5d6fd2;
+            --success-color: #27ae60;
+            --danger-color: #dc2626;
+            --warning-color: #f39c12;
+            --dark-bg: #2a2a2a;
+            --dark-text: #ffffff;
+            --light-bg: #f5f5f5;
+            --light-text: #000000;
+            --input-border: #ccc;
+            --input-bg: #fafafa;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Poppins", sans-serif;
+            background: linear-gradient(110deg, #0a1a33 0%, #1a2744 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        body.dark-mode {
+            background: linear-gradient(110deg, #0d0d0d 0%, #1a1a1a 100%);
+        }
+
+        .signup-container {
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            max-width: 450px;
+            width: 100%;
+            padding: 40px;
+            max-height: 90vh;
+            overflow-y: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            animation: slideUp 0.5s ease;
+        }
+
+        .signup-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        body.dark-mode .signup-container {
+            background: #2a2a2a;
+            color: var(--dark-text);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .signup-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .signup-header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            color: #000000;
+        }
+
+        body.dark-mode .signup-header h1 {
+            color: #ffffff;
+        }
+
+        .signup-header p {
+            font-size: 14px;
+            color: #555;
+        }
+
+        body.dark-mode .signup-header p {
+            color: #d0d0d0;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 13px;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        body.dark-mode label {
+            color: #d0d0d0;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--input-border);
+            border-radius: 12px;
+            font-size: 14px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            background: var(--input-bg);
+            color: #000000;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body.dark-mode input[type="text"],
+        body.dark-mode input[type="password"],
+        body.dark-mode select {
+            background: #333333;
+            border-color: #444444;
+            color: #ffffff;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 8px rgba(93, 111, 210, 0.3);
+        }
+
+        .password-strength {
+            margin-top: 8px;
+            height: 6px;
+            background: #eee;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        body.dark-mode .password-strength {
+            background: #444;
+        }
+
+        .password-strength-bar {
+            height: 100%;
+            width: 0%;
+            border-radius: 3px;
+            transition: width 0.3s, background-color 0.3s;
+        }
+
+        .strength-weak { background: var(--danger-color); width: 33%; }
+        .strength-fair { background: var(--warning-color); width: 66%; }
+        .strength-good { background: var(--success-color); width: 100%; }
+
+        .strength-text {
+            font-size: 12px;
+            margin-top: 4px;
+            font-weight: 600;
+        }
+
+        .strength-weak ~ .strength-text { color: var(--danger-color); }
+        .strength-fair ~ .strength-text { color: var(--warning-color); }
+        .strength-good ~ .strength-text { color: var(--success-color); }
+
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 18px;
+        }
+
+        input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-right: 10px;
+            cursor: pointer;
+            margin-top: 2px;
+        }
+
+        .checkbox-group label {
+            margin: 0;
+            font-weight: 400;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .form-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 22px;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-submit {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-submit:hover {
+            background: #4b5ecc;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(93, 111, 210, 0.3);
+        }
+
+        .btn-submit:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-back {
+            background: #ecf0f1;
+            color: #333;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        body.dark-mode .btn-back {
+            background: #3a3a3a;
+            color: var(--dark-text);
+        }
+
+        .btn-back:hover {
+            background: #d5dbdb;
+        }
+
+        body.dark-mode .btn-back:hover {
+            background: #4a4a4a;
+        }
+
+        .message {
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            display: none;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .message.success {
+            background: #e6ffed;
+            color: #065f46;
+            border: 1px solid #6ee7b7;
+            display: flex;
+        }
+
+        body.dark-mode .message.success {
+            background: #064e3b;
+            color: #d1fae5;
+            border-color: #10b981;
+        }
+
+        .message.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+            display: flex;
+        }
+
+        body.dark-mode .message.error {
+            background: #7f1d1d;
+            color: #fca5a5;
+            border-color: #991b1b;
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 13px;
+            color: #555;
+            border-top: 1px solid var(--input-border);
+            padding-top: 20px;
+        }
+
+        body.dark-mode .form-footer {
+            color: #d0d0d0;
+            border-top-color: #444444;
+        }
+
+        .form-footer a {
+            color: #4b8acb;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        body.dark-mode .form-footer a {
+            color: #7ba3d4;
+        }
+
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .dark-mode-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border: 2px solid var(--input-border);
+            padding: 4px 8px;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            z-index: 1000;
+            transition: 0.3s;
+        }
+
+        body.dark-mode .dark-mode-toggle {
+            background: #2a2a2a;
+            border-color: #444444;
+        }
+
+        .dark-mode-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .form-info {
+            background: #e8f4f8;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 12px;
+            margin-bottom: 18px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        body.dark-mode .form-info {
+            background: rgba(52, 152, 219, 0.2);
+            color: #5dde95;
+        }
+
+        .two-column-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .two-column-grid .form-group {
+            margin-bottom: 0;
+        }
+
+        .two-column-grid .form-group + .form-group {
+            margin-top: 20px;
+        }
+
+        @media (max-width: 700px) {
+            .two-column-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .requirements-list {
+            font-size: 12px;
+            line-height: 1.6;
+            margin-top: 8px;
+            color: #333;
+        }
+
+        body.dark-mode .requirements-list {
+            color: var(--dark-text);
+        }
+
+        .requirements-list li {
+            margin-left: 20px;
+            list-style: disc;
+        }
+
+        .requirement-check {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #ddd;
+            color: white;
+            text-align: center;
+            line-height: 16px;
+            font-size: 11px;
+            margin-right: 6px;
+        }
+
+        .requirement-check.met {
+            background: var(--success-color);
+        }
+    </style>
+</head>
+<body>
+    <button class="dark-mode-toggle" onclick="toggleDarkMode()" title="Toggle Dark Mode">🌙</button>
+
+    <div class="signup-container">
+        <div class="signup-header">
+            <h1>Admin Registration</h1>
+            <p>Create a new admin account (pending superadmin approval)</p>
+        </div>
+
+        <div id="messageBox" class="message"></div>
+
+        <form id="signupForm" autocomplete="off" onsubmit="submitAdminSignup(event)">
+            <div class="form-info">
+                <strong>Registration Info:</strong>
+                <ul class="requirements-list">
+                    <li>Complete this form with your admin credentials</li>
+                    <li>Your account will be pending superadmin approval</li>
+                    <li>You'll receive a notification when approved/rejected</li>
+                </ul>
+            </div>
+
+            <div class="two-column-grid">
+                <!-- Left column -->
+                <div>
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" autocomplete="off" placeholder="Enter desired username" required>
+                        <small id="usernameError" style="color: var(--danger-color); display: none;"></small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" autocomplete="new-password" placeholder="Enter password" required onchange="checkPasswordStrength()">
+                        <div class="password-strength">
+                            <div id="passwordStrengthBar" class="password-strength-bar"></div>
+                        </div>
+                        <span id="strengthText" class="strength-text"></span>
+                    </div>
+                </div>
+
+                <!-- Right column -->
+                <div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <input type="password" id="confirmPassword" autocomplete="new-password" placeholder="Re-enter password" required>
+                        <small id="passwordMatch" style="color: var(--danger-color); display: none;">Passwords do not match</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="secretCode">Admin Secret Code</label>
+                        <input type="password" id="secretCode" autocomplete="off" placeholder="Enter secret code" required>
+                        <small style="color: #999;">This is required to prevent unauthorized registrations</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Role (defaults to admin) -->
+            <div class="form-group">
+                <label for="role">Role</label>
+                <select id="role" required>
+                    <option value="admin" selected>Admin</option>
+                    <option value="superadmin" disabled>Super Admin (not available for registration)</option>
+                </select>
+                <small style="color: #999;">Default role is Admin. Contact superadmin to upgrade.</small>
+            </div>
+
+            <!-- Agree to Terms -->
+            <div class="checkbox-group">
+                <input type="checkbox" id="agreeTerms" required>
+                <label for="agreeTerms">I agree to follow all administrative policies and procedures</label>
+            </div>
+
+            <!-- Buttons -->
+            <div class="form-buttons">
+                <a href="admin-login.html" class="btn-back">← Back to Login</a>
+                <button type="submit" class="btn-submit" id="submitBtn">Register</button>
+            </div>
+        </form>
+
+        <div class="form-footer">
+            Already have an account? <a href="admin-login.html">Sign in here</a>
+        </div>
+    </div>
+
+    <script>
+        const ADMIN_SECRET_CODE = 'ADMIN2026';
+        const BACKEND_BASE_URL = (() => {
+            if (window.location.protocol === 'file:') return 'http://localhost:3000';
+            if (window.location.hostname === 'localhost' && window.location.port === '3000') return window.location.origin;
+            if (window.location.hostname === '127.0.0.1' && window.location.port === '3000') return window.location.origin;
+            return 'http://localhost:3000';
+        })();
+
+        // Dark mode functionality
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('pref-darkMode', document.body.classList.contains('dark-mode') ? 1 : 0);
+        }
+
+        // Load dark mode preference
+        if (localStorage.getItem('pref-darkMode') == 1) {
+            document.body.classList.add('dark-mode');
+        }
+
+        // Ensure admin_users array exists in localStorage
+        if (!localStorage.getItem('admin_users')) {
+            localStorage.setItem('admin_users', JSON.stringify([]));
+        }
+
+        // Password strength checker
+        function checkPasswordStrength() {
+            const password = document.getElementById('password').value;
+            const strengthBar = document.getElementById('passwordStrengthBar');
+            const strengthText = document.getElementById('strengthText');
+
+            let strength = 0;
+            const requirements = {
+                length: password.length >= 8,
+                uppercase: /[A-Z]/.test(password),
+                lowercase: /[a-z]/.test(password),
+                numbers: /[0-9]/.test(password),
+                special: /[!@#$%^&*]/.test(password)
+            };
+
+            for (let req in requirements) {
+                if (requirements[req]) strength++;
+            }
+
+            strengthBar.className = 'password-strength-bar';
+            if (strength <= 2) {
+                strengthBar.classList.add('strength-weak');
+                strengthText.textContent = '❌ Weak - Add uppercase, numbers, and symbols';
+                strengthText.style.color = '#e74c3c';
+            } else if (strength <= 3) {
+                strengthBar.classList.add('strength-fair');
+                strengthText.textContent = '⚠️ Fair - Consider adding more variety';
+                strengthText.style.color = '#f39c12';
+            } else {
+                strengthBar.classList.add('strength-good');
+                strengthText.textContent = '✓ Strong password';
+                strengthText.style.color = '#27ae60';
+            }
+        }
+
+        // Real-time validation
+        document.getElementById('password').addEventListener('change', checkPasswordStrength);
+        document.getElementById('confirmPassword').addEventListener('change', function() {
+            const password = document.getElementById('password').value;
+            const confirm = this.value;
+            const matchMsg = document.getElementById('passwordMatch');
+            
+            if (confirm && password !== confirm) {
+                matchMsg.style.display = 'block';
+            } else {
+                matchMsg.style.display = 'none';
+            }
+        });
+
+        // Show/hide message
+        function showMessage(text, type) {
+            const box = document.getElementById('messageBox');
+            box.textContent = text;
+            box.className = `message ${type}`;
+            if (type === 'success') {
+                setTimeout(() => {
+                    box.style.display = 'none';
+                }, 5000);
+            }
+        }
+
+        // Form submission
+        async function submitAdminSignup(event) {
+            event.preventDefault();
+
+            const secretCode = document.getElementById('secretCode').value;
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const role = document.getElementById('role').value;
+            const agreeTerms = document.getElementById('agreeTerms').checked;
+
+            // Validation
+            if (secretCode !== ADMIN_SECRET_CODE) {
+                showMessage('❌ Invalid secret code', 'error');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                showMessage('❌ Passwords do not match', 'error');
+                return;
+            }
+
+            if (password.length < 8) {
+                showMessage('❌ Password must be at least 8 characters long', 'error');
+                return;
+            }
+
+            if (!/[A-Z]/.test(password) || !/[0-9]/.test(password)) {
+                showMessage('❌ Password must contain uppercase letters and numbers', 'error');
+                return;
+            }
+
+            if (!agreeTerms) {
+                showMessage('❌ You must agree to the administrative policies', 'error');
+                return;
+            }
+
+            if (username.length < 3) {
+                showMessage('❌ Username must be at least 3 characters long', 'error');
+                return;
+            }
+
+            // Disable submit button
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Registering...';
+
+            try {
+                // Store admin registration data locally
+                let admins = [];
+                try {
+                    const stored = localStorage.getItem('admin_users');
+                    admins = stored ? JSON.parse(stored) : [];
+                } catch (parseError) {
+                    console.warn('Could not parse existing admin_users:', parseError);
+                    admins = [];
+                }
+                
+                // Check if username already exists
+                if (admins.some(admin => admin.username === username)) {
+                    showMessage('❌ Username already exists', 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Register';
+                    return;
+                }
+
+                // Add new admin
+                const newAdmin = {
+                    username: username,
+                    password: password,
+                    role: role,
+                    displayName: username.charAt(0).toUpperCase() + username.slice(1),
+                    createdAt: new Date().toISOString(),
+                    status: 'pending'
+                };
+                admins.push(newAdmin);
+
+                // Save to localStorage
+                const serialized = JSON.stringify(admins);
+                localStorage.setItem('admin_users', serialized);
+                
+                // Verify save was successful
+                const verify = localStorage.getItem('admin_users');
+                if (!verify) {
+                    throw new Error('Failed to save admin account to localStorage');
+                }
+                
+                console.log('Admin account saved successfully:', username);
+                showMessage('✓ Registration complete! Redirecting to login...', 'success');
+                document.getElementById('signupForm').reset();
+                setTimeout(() => {
+                    const loginUrl = 'admin-login.html?registered=true&username=' + encodeURIComponent(username);
+                    window.location.href = loginUrl;
+                }, 1500);
+            } catch (error) {
+                console.error('Signup error:', error);
+                showMessage('❌ Registration failed: ' + error.message, 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Register';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            ['username', 'password', 'confirmPassword', 'secretCode'].forEach((id) => {
+                const field = document.getElementById(id);
+                if (field) {
+                    field.value = '';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,3143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IDEease Portal Admin Dashboard</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+      :root {
+        --sidebar-width: 280px;
+        --sidebar-bg: #0a1a33;
+        --navy: #0f2340;
+        --light-text: #6b7280;
+        --primary-text: #1f2937;
+        --muted: #9ca3af;
+        --accent-blue: #3b82f6;
+        --accent-orange: #f59e0b;
+        --accent-green: #dfdfdf;
+        --accent-green: #58cff3;
+        --accent-green: #10b981;
+        --accent-red: #ef4444;
+        --dark-bg: #ffffff;
+        --card-bg: #f9fafb;
+        --input-bg: #f3f4f6;
+        --border-color: #e5e7eb;
+        --request-warning-bg: #fee2e2;
+        --request-warning-text: #991b1b;
+        --analytics-gradient-light: #f8fafc;
+        --analytics-gradient-dark: #e2e8f0;
+        --btn-disabled-bg: #93c5fd;
+        --radius: 12px;
+        --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        --gap: 16px;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+      }
+
+      body.dark-mode {
+        --primary-text: #ffffff;
+        --light-text: #e0e6f2;
+        --muted: #9ca3af;
+        --dark-bg: #0f1419;
+        --card-bg: #1f2937;
+        --input-bg: #111827;
+        --border-color: #374151;
+        --sidebar-bg: #0d0d0d;
+        --request-warning-bg: #2b1d25;
+        --request-warning-text: #fecaca;
+        --analytics-gradient-light: #111827;
+        --analytics-gradient-dark: #1f2937;
+        --btn-disabled-bg: #1d4ed8;
+        --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        background: var(--dark-bg);
+        color: var(--light-text);
+        display: flex;
+        height: 100vh;
+        overflow: hidden;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+      }
+
+      /* ================= SIDEBAR ================= */
+      .sidebar {
+        width: 220px;
+        height: 100vh;
+        background: var(--sidebar-bg);
+        color: white;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        border-radius: 0 20px 20px 0;
+        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.4);
+        overflow-y: auto;
+      }
+
+      .logo {
+        margin-bottom: 40px;
+        text-align: center;
+      }
+
+      .logo h2 {
+        font-size: 24px;
+        margin: 10px 0 0;
+        font-weight: 700;
+      }
+
+      .sidebar .logo i {
+        font-size: 34px;
+        color: #fff;
+      }
+
+      .logo p {
+        font-size: 12px;
+        color: #b9c6e0;
+        margin-top: 4px;
+      }
+
+      .menu {
+        margin-top: 20px;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .menu-item {
+        padding: 12px 15px;
+        margin-bottom: 8px;
+        border-radius: 10px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #d9e3f5;
+        text-decoration: none;
+        transition: all 0.2s ease;
+      }
+
+      .menu-item:hover,
+      .menu-item.active {
+        background: rgba(255, 255, 255, 0.12);
+        color: #fff;
+      }
+
+      body.dark-mode .sidebar {
+        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.6);
+      }
+
+      body.dark-mode .menu-item {
+        color: #d6e0ff;
+      }
+
+      body.dark-mode .menu-item:hover,
+      body.dark-mode .menu-item.active {
+        background: rgba(255, 255, 255, 0.14);
+        color: #ffffff;
+      }
+
+      a.menu-item {
+        display: flex;
+        text-decoration: none;
+        color: inherit;
+      }
+
+      /* Main content area */
+      .main {
+        flex: 1;
+        min-height: 100vh;
+        padding: 24px 32px;
+        overflow-y: auto;
+        background: var(--dark-bg);
+      }
+
+      .header-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 24px;
+      }
+
+      .header-row h1 {
+        font-size: 32px;
+        font-weight: 700;
+        color: var(--primary-text);
+        margin: 0;
+      }
+
+      .header-row p {
+        color: var(--muted);
+        font-size: 14px;
+        margin: 6px 0 0 0;
+      }
+
+      .header-controls {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+
+      .icon-btn {
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: var(--light-text);
+        font-size: 18px;
+        transition: all 0.2s ease;
+      }
+
+      .icon-btn:hover {
+        background: var(--card-bg);
+        color: var(--accent-blue);
+      }
+
+      .new-request-btn {
+        background: var(--accent-blue);
+        color: white;
+        padding: 10px 16px;
+        border-radius: 8px;
+        border: 0;
+        font-weight: 600;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.2s ease;
+        font-size: 14px;
+      }
+
+      .new-request-btn:hover {
+        background: #2563eb;
+        transform: translateY(-2px);
+      }
+
+      .new-request-btn.disabled {
+        opacity: 0.6;
+        pointer-events: none;
+        background: var(--btn-disabled-bg);
+        cursor: not-allowed;
+      }
+
+      .request-warning {
+        margin-top: 16px;
+        padding: 14px 16px;
+        border-radius: 10px;
+        border-left: 4px solid rgba(239, 68, 68, 0.9);
+        background: var(--request-warning-bg);
+        color: var(--request-warning-text);
+        font-size: 14px;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      .modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.7);
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        z-index: 1000;
+      }
+
+      .modal-overlay.active {
+        display: flex;
+      }
+
+      .modal-content {
+        width: 100%;
+        max-width: 520px;
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 18px;
+        padding: 28px;
+        box-shadow: var(--shadow);
+      }
+
+      .modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+
+      .modal-header h2 {
+        font-size: 20px;
+        margin: 0;
+        color: var(--primary-text);
+      }
+
+      .modal-close {
+        background: none;
+        border: none;
+        font-size: 24px;
+        color: var(--muted);
+        cursor: pointer;
+      }
+
+      .modal-close:hover {
+        color: var(--primary-text);
+      }
+
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+
+      .form-group {
+        margin-bottom: 16px;
+      }
+
+      .form-group label {
+        display: block;
+        font-size: 13px;
+        color: var(--primary-text);
+        margin-bottom: 8px;
+        font-weight: 600;
+      }
+
+      .form-group input,
+      .form-group select,
+      .form-group textarea {
+        width: 100%;
+        padding: 12px 14px;
+        border-radius: 12px;
+        border: 1px solid var(--border-color);
+        background: var(--input-bg);
+        color: var(--primary-text);
+        font-size: 14px;
+        outline: none;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .form-group input:focus,
+      .form-group select:focus,
+      .form-group textarea:focus {
+        border-color: var(--accent-blue);
+        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12);
+      }
+
+      .form-help {
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 6px;
+      }
+
+      .form-error {
+        font-size: 12px;
+        color: var(--accent-red);
+        margin-top: 6px;
+        display: none;
+      }
+
+      .form-error.visible {
+        display: block;
+      }
+
+      .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .form-actions button {
+        min-width: 120px;
+        border: none;
+        border-radius: 12px;
+        padding: 12px 16px;
+        font-size: 14px;
+        cursor: pointer;
+        font-weight: 600;
+      }
+
+      .btn-secondary {
+        background: var(--input-bg);
+        color: var(--primary-text);
+      }
+
+      .btn-primary {
+        background: var(--accent-blue);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: #2563eb;
+      }
+
+      .btn-secondary:hover {
+        background: rgba(59, 130, 246, 0.08);
+      }
+
+      .modal-fullwidth {
+        grid-column: 1 / -1;
+      }
+
+      .form-row.single-column {
+        grid-template-columns: 1fr;
+      }
+
+      .modal-note {
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: -8px;
+      }
+
+      .card {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius);
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: var(--shadow);
+      }
+
+      .card h2 {
+        margin: 0 0 16px 0;
+        font-size: 17px;
+        font-weight: 600;
+        color: var(--primary-text);
+      }
+
+      /* Status Cards Grid */
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 16px;
+        margin-bottom: 0;
+      }
+
+      .stat-card {
+        background: var(--input-bg);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius);
+        padding: 18px;
+        text-align: center;
+        transition: all 0.2s ease;
+      }
+
+      .stat-card:hover {
+        border-color: var(--accent-blue);
+        transform: translateY(-2px);
+      }
+
+      .stat-card.received {
+        border-left: 4px solid var(--accent-blue);
+      }
+
+      .stat-card.processing {
+        border-left: 4px solid var(--accent-orange);
+      }
+
+      .stat-card.completed {
+        border-left: 4px solid var(--accent-green);
+      }
+
+      .stat-card.rejected {
+        border-left: 4px solid var(--accent-red);
+      }
+
+      .stat-value {
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 6px;
+        color: var(--primary-text);
+      }
+
+      .stat-card.received .stat-value {
+        color: var(--accent-blue);
+      }
+
+      .stat-card.processing .stat-value {
+        color: var(--accent-orange);
+      }
+
+      .stat-card.completed .stat-value {
+        color: var(--accent-green);
+      }
+
+      .stat-card.rejected .stat-value {
+        color: var(--accent-red);
+      }
+
+      .stat-label {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--primary-text);
+        margin-bottom: 4px;
+      }
+
+      .stat-sublabel {
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      /* Progress Tracker */
+      .progress-tracker {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 0;
+      }
+
+      .progress-step {
+        flex: 1;
+        text-align: center;
+        position: relative;
+      }
+
+      .progress-step:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        top: 24px;
+        left: 50%;
+        width: 100%;
+        height: 2px;
+        background: var(--border-color);
+      }
+
+      .progress-step.active:not(:last-child)::after {
+        background: var(--accent-blue);
+      }
+
+      .progress-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: var(--input-bg);
+        border: 2px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 10px;
+        font-size: 20px;
+        color: var(--muted);
+        transition: all 0.3s ease;
+        position: relative;
+        z-index: 1;
+      }
+
+      .progress-step.active .progress-icon {
+        background: var(--accent-blue);
+        border-color: var(--accent-blue);
+        color: white;
+        box-shadow: 0 0 12px rgba(59, 130, 246, 0.4);
+      }
+
+      .progress-label {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--light-text);
+        margin-top: 8px;
+      }
+
+      .progress-step.active .progress-label {
+        color: var(--accent-blue);
+        font-weight: 700;
+      }
+
+      /* Analytics Strip */
+      .analytics-strip {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px;
+      }
+
+      .analytics-item {
+        background: linear-gradient(135deg, var(--analytics-gradient-light), var(--analytics-gradient-dark));
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius);
+        padding: 16px;
+        text-align: center;
+      }
+
+      .analytics-value {
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--accent-blue);
+        margin-bottom: 6px;
+      }
+
+      .analytics-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--light-text);
+        margin-bottom: 4px;
+      }
+
+      .analytics-detail {
+        font-size: 11px;
+        color: var(--muted);
+      }
+
+      /* Request Table */
+      .table-wrapper {
+        overflow-x: auto;
+        border-radius: var(--radius);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      thead {
+        background: var(--input-bg);
+      }
+
+      thead th {
+        padding: 12px;
+        text-align: left;
+        font-weight: 600;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--light-text);
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      tbody td {
+        padding: 12px;
+        border-bottom: 1px solid var(--border-color);
+        font-size: 13px;
+        color: var(--light-text);
+      }
+
+      tbody tr {
+        transition: all 0.2s ease;
+      }
+
+      tbody tr:hover {
+        background: var(--input-bg);
+      }
+
+      .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        width: fit-content;
+      }
+
+      .status-pending {
+        background: rgba(59, 130, 246, 0.2);
+        color: var(--accent-blue);
+        border: 1px solid rgba(59, 130, 246, 0.4);
+      }
+
+      .status-processing {
+        background: rgba(245, 158, 11, 0.2);
+        color: var(--accent-orange);
+        border: 1px solid rgba(245, 158, 11, 0.4);
+      }
+
+      .status-completed {
+        background: rgba(16, 185, 129, 0.2);
+        color: var(--accent-green);
+        border: 1px solid rgba(16, 185, 129, 0.4);
+      }
+
+      .status-success {
+        background: rgba(16, 185, 129, 0.2);
+        color: var(--accent-green);
+        border: 1px solid rgba(16, 185, 129, 0.4);
+      }
+
+      .status-danger {
+        background: rgba(239, 68, 68, 0.2);
+        color: var(--accent-red);
+        border: 1px solid rgba(239, 68, 68, 0.4);
+      }
+
+      .status-rejected {
+        background: rgba(239, 68, 68, 0.2);
+        color: var(--accent-red);
+        border: 1px solid rgba(239, 68, 68, 0.4);
+      }
+
+      .action-btn {
+        background: none;
+        border: none;
+        color: var(--accent-blue);
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: 600;
+        padding: 4px 8px;
+        border-radius: 4px;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        display: inline-block;
+      }
+
+      .action-btn:hover {
+        background: rgba(59, 130, 246, 0.2);
+        color: #60a5fa;
+      }
+
+      .action-btn.danger {
+        color: var(--accent-red);
+      }
+
+      .action-btn.danger:hover {
+        background: rgba(239, 68, 68, 0.2);
+        color: #f87171;
+      }
+
+      .action-btn.success {
+        color: var(--accent-green);
+      }
+
+      .action-btn.success:hover {
+        background: rgba(16, 185, 129, 0.2);
+        color: #34d399;
+      }
+
+      .status-select {
+        padding: 6px 8px;
+        border: 1px solid var(--border-color);
+        border-radius: 4px;
+        background: var(--input-bg);
+        color: var(--primary-text);
+        font-size: 12px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .status-select:hover,
+      .status-select:focus {
+        border-color: var(--accent-blue);
+        outline: none;
+      }
+
+      .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+      }
+
+      .modal-content {
+        background: var(--surface);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        max-width: 750px;
+        width: 95%;
+        max-height: 90vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .modal-header h2 {
+        margin: 0;
+        font-size: 18px;
+      }
+
+      .modal-close {
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        color: var(--muted);
+        padding: 0;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .modal-close:hover {
+        color: var(--primary-text);
+      }
+
+      .modal-body {
+        padding: 20px;
+        overflow-y: auto;
+        flex: 1;
+      }
+
+      .details-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+      }
+
+      .detail-item {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .detail-item label {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--muted);
+        margin-bottom: 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .detail-item p {
+        margin: 0;
+        color: var(--primary-text);
+        font-size: 14px;
+        word-break: break-word;
+      }
+
+      .files-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+      }
+
+      .file-item {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .file-item label {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--muted);
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .file-preview {
+        background: var(--input-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        padding: 10px;
+        min-height: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+      }
+
+      .file-preview img {
+        max-width: 100%;
+        max-height: 120px;
+        border-radius: 4px;
+        object-fit: contain;
+      }
+
+      .file-preview-link {
+        color: var(--accent-blue);
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 12px;
+        padding: 6px 10px;
+        background: rgba(59, 130, 246, 0.1);
+        border-radius: 4px;
+        display: inline-block;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .file-preview-link:hover {
+        background: rgba(59, 130, 246, 0.2);
+      }
+
+      .modal-footer {
+        padding: 20px;
+        border-top: 1px solid var(--border-color);
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+      }
+
+      .btn-secondary {
+        padding: 8px 16px;
+        background: var(--input-bg);
+        color: var(--primary-text);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius);
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        transition: all 0.2s ease;
+      }
+
+      .btn-secondary:hover {
+        background: var(--border-color);
+      }
+
+      .no-data {
+        text-align: center;
+        padding: 40px 20px;
+        color: var(--muted);
+      }
+
+      .no-data p {
+        margin: 0;
+        font-size: 14px;
+      }
+
+      .role-badge {
+        display: inline-block;
+        background: rgba(59, 130, 246, 0.2);
+        color: var(--accent-blue);
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: 600;
+        margin-left: 8px;
+      }
+
+      /* ================= MODAL FORM ================= */
+      .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .modal-overlay.active {
+        display: flex;
+      }
+
+      .modal-content {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 32px;
+        width: 100%;
+        max-width: 500px;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        animation: slideUp 0.3s ease;
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+      }
+
+      .modal-header h2 {
+        margin: 0;
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--primary-text);
+      }
+
+      .modal-close {
+        background: none;
+        border: none;
+        font-size: 24px;
+        color: var(--muted);
+        cursor: pointer;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: color 0.2s ease;
+      }
+
+      .modal-close:hover {
+        color: var(--primary-text);
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-group label {
+        display: block;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--primary-text);
+        margin-bottom: 8px;
+      }
+
+      .form-group input,
+      .form-group select,
+      .form-group textarea {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        background: var(--input-bg);
+        color: var(--primary-text);
+        font-family: inherit;
+        font-size: 14px;
+        transition: border-color 0.2s ease;
+      }
+
+      .form-group input:focus,
+      .form-group select:focus,
+      .form-group textarea:focus {
+        outline: none;
+        border-color: var(--accent-blue);
+      }
+
+      .form-group small {
+        display: block;
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 6px;
+      }
+
+      .form-group.required label::after {
+        content: " *";
+        color: var(--accent-red);
+      }
+
+      .file-input-wrapper {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .file-input-wrapper input[type="file"] {
+        display: none;
+      }
+
+      .file-input-label {
+        display: inline-block;
+        padding: 12px 16px;
+        background: var(--input-bg);
+        border: 1px dashed var(--border-color);
+        border-radius: 8px;
+        cursor: pointer;
+        text-align: center;
+        width: 100%;
+        box-sizing: border-box;
+        transition: all 0.2s ease;
+      }
+
+      .file-input-label:hover {
+        border-color: var(--accent-blue);
+        background: rgba(59, 130, 246, 0.05);
+      }
+
+      .file-input-label i {
+        margin-right: 8px;
+        color: var(--accent-blue);
+      }
+
+      .form-actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 28px;
+      }
+
+      .form-actions button {
+        flex: 1;
+        padding: 12px 16px;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .form-actions .btn-submit {
+        background: var(--accent-blue);
+        color: white;
+      }
+
+      .form-actions .btn-submit:hover {
+        background: #2563eb;
+        transform: translateY(-2px);
+      }
+
+      .form-actions .btn-cancel {
+        background: var(--card-bg);
+        color: var(--primary-text);
+        border: 1px solid var(--border-color);
+      }
+
+      .form-actions .btn-cancel:hover {
+        background: var(--input-bg);
+      }
+
+      .form-error {
+        color: var(--accent-red);
+        font-size: 13px;
+        margin-top: 6px;
+        display: none;
+      }
+
+      .form-error.show {
+        display: block;
+      }
+
+      /* Scrollbar styling */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: var(--input-bg);
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: var(--border-color);
+        border-radius: 4px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: var(--muted);
+      }
+
+      .tab-section {
+        display: none;
+      }
+
+      .tab-section.active {
+        display: block;
+      }
+
+      .menu-item {
+        cursor: pointer;
+      }
+
+      .menu-item.active {
+        background: rgba(255, 255, 255, 0.15) !important;
+        color: #fff !important;
+      }
+
+      @media (max-width: 768px) {
+        .sidebar {
+          width: 180px;
+          padding: 16px;
+        }
+
+        .main {
+          padding: 16px 20px;
+        }
+
+        .header-row {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .header-row h1 {
+          font-size: 24px;
+        }
+
+        .stats-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .progress-tracker {
+          flex-direction: column;
+          gap: 12px;
+        }
+
+        .progress-step:not(:last-child)::after {
+          display: none;
+        }
+
+        table {
+          font-size: 12px;
+        }
+
+        thead th,
+        tbody td {
+          padding: 8px;
+        }
+      }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <i class="fa-solid fa-graduation-cap"></i>
+            <h2>IDEease Portal</h2>
+            <p id="roleLabel">Admin Services</p>
+        </div>
+
+        <div class="menu">
+                <div class="menu-item active" id="dashboardTab" onclick="switchAdminTab('dashboard'); return false;">
+                    <i class="fa-solid fa-chart-pie"></i>
+                    Dashboard
+                </div>
+                <div class="menu-item" id="studentRequestsTab" onclick="switchAdminTab('studentRequests'); return false;">
+                    <i class="fa-solid fa-file-invoice"></i>
+                    Student Requests
+                </div>
+            <div class="menu-item" id="historyTab" onclick="switchAdminTab('history'); return false;">
+                <i class="fa-solid fa-history"></i>
+                History
+            </div>
+            <div class="menu-item" id="settingsTab" onclick="switchAdminTab('settings'); return false;">
+                <i class="fa-solid fa-gear"></i>
+                Settings
+            </div>
+            <div class="menu-item" onclick="logout(); return false;" style="margin-top: auto; border-top: 1px solid rgba(255, 255, 255, 0.2); padding-top: 12px;">
+                <i class="fa-solid fa-sign-out-alt"></i>
+                Logout
+            </div>
+        </div>
+    </div>
+
+    <div class="main">
+        <div class="header-row">
+            <div>
+                <h1 id="pageTitle">Admin Dashboard</h1>
+                <p id="welcomeMsg">Welcome back, ADMIN! Manage all student ID requests and track their status.</p>
+            </div>
+            <div class="header-controls">
+            </div>
+            <div id="requestBlockedNotice" class="request-warning hidden" role="status" aria-live="polite"></div>
+        </div>
+
+        <div id="newRequestModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="newRequestTitle">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="newRequestTitle">Submit New Request</h2>
+                    <button type="button" class="modal-close" id="closeNewRequestBtn" aria-label="Close modal">×</button>
+                </div>
+                <form id="newRequestForm">
+                    <input type="hidden" id="requestId" name="requestId" value="">
+                    <div class="form-row single-column">
+                        <div class="form-group">
+                            <label for="requestFullName">Full Name</label>
+                            <input type="text" id="requestFullName" name="fullName" placeholder="Enter full name" required>
+                            <div class="form-error" id="errorFullName">Please enter your full name.</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="requestStudentId">Student ID Number</label>
+                            <input type="text" id="requestStudentId" name="studentId" placeholder="Enter student ID" required>
+                            <div class="form-error" id="errorStudentId">Please enter a student ID number.</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="requestType">Request Type</label>
+                            <select id="requestType" name="type" required>
+                                <option value="">Select a request type</option>
+                                <option value="New ID">New ID</option>
+                                <option value="Replacement">Replacement</option>
+                                <option value="Photo Update">Photo Update</option>
+                            </select>
+                            <div class="form-error" id="errorRequestType">Please select a request type.</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="requestPhoto">Photo Upload (optional)</label>
+                            <input type="file" id="requestPhoto" name="photo" accept="image/*">
+                            <div class="form-help">Upload an image if needed for a photo update.</div>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" id="cancelNewRequestBtn">Cancel</button>
+                        <button type="submit" class="btn-primary" id="submitRequestBtn">Submit Request</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- DASHBOARD OVERVIEW TAB -->
+        <div id="dashboardOverview" class="tab-section active">
+            <!-- REQUEST STATUS OVERVIEW -->
+            <div class="card">
+                <h2>Request Status Overview</h2>
+                <div class="stats-grid">
+                    <div class="stat-card submitted">
+                        <div class="stat-value" id="countSubmitted">0</div>
+                        <div class="stat-label">Submitted</div>
+                        <div class="stat-sublabel">Total requests</div>
+                    </div>
+                    <div class="stat-card processing">
+                        <div class="stat-value" id="countProcessing">0</div>
+                        <div class="stat-label">Processing</div>
+                        <div class="stat-sublabel">In progress</div>
+                    </div>
+                    <div class="stat-card completed">
+                        <div class="stat-value" id="countCompleted">0</div>
+                        <div class="stat-label">Completed</div>
+                        <div class="stat-sublabel">Approved</div>
+                    </div>
+                    <div class="stat-card rejected">
+                        <div class="stat-value" id="countRejected">0</div>
+                        <div class="stat-label">Rejected</div>
+                        <div class="stat-sublabel">Declined</div>
+                    </div>
+                </div>
+            </div>
+
+            <section class="card">
+                <h2>Reports & Analytics</h2>
+                <div class="analytics-strip">
+                    <div class="analytics-item">
+                        <div class="analytics-value" id="reportTotalRequests">0</div>
+                        <div class="analytics-label">Total Requests</div>
+                        <div class="analytics-detail">All student submissions</div>
+                    </div>
+                    <div class="analytics-item">
+                        <div class="analytics-value" id="reportAvgProcessingTime">2-3 days</div>
+                        <div class="analytics-label">Average Processing Time</div>
+                        <div class="analytics-detail">Processed requests only</div>
+                    </div>
+                    <div class="analytics-item">
+                        <div class="analytics-value" id="reportRejectionRate">0%</div>
+                        <div class="analytics-label">Rejection Rate</div>
+                        <div class="analytics-detail">Declined requests</div>
+                    </div>
+                    <div class="analytics-item">
+                        <div class="analytics-value" id="reportSecurityStatus">Secure</div>
+                        <div class="analytics-label">System Security</div>
+                        <div class="analytics-detail">Monitoring active</div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- ADMIN REQUESTS TAB -->
+        <!-- STUDENT REQUESTS TAB -->
+        <div id="studentRequestsSection" class="tab-section">
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                    <h2 style="margin: 0;">Student Requests</h2>
+                    <button class="action-btn danger" onclick="clearAllStudentRequests()" style="color: var(--accent-red); font-weight: 600;">Clear All Requests</button>
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Request ID</th>
+                                <th>Student Name</th>
+                                <th>Student ID</th>
+                                <th>Type</th>
+                                <th>Submitted Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentRequestsTableBody">
+                        </tbody>
+                    </table>
+                </div>
+                <div id="noStudentRequestsMessage" class="no-data" style="display: none;">
+                    <p>No student requests submitted yet.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW DETAILS MODAL -->
+        <div id="detailsModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Request Details</h2>
+                    <button class="modal-close" onclick="closeDetailsModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="details-grid">
+                        <div class="detail-item">
+                            <label>Request ID</label>
+                            <p id="detailRequestId">—</p>
+                        </div>
+                        <div class="detail-item">
+                            <label>Status</label>
+                            <p id="detailStatus">—</p>
+                        </div>
+                        <div class="detail-item">
+                            <label>Full Name</label>
+                            <p id="detailFullName">—</p>
+                        </div>
+                        <div class="detail-item">
+                            <label>Student ID</label>
+                            <p id="detailStudentId">—</p>
+                        </div>
+                        <div class="detail-item">
+                            <label>Department</label>
+                            <p id="detailDepartment">—</p>
+                        </div>
+                        <div class="detail-item">
+                            <label>Program</label>
+                            <p id="detailProgram">—</p>
+                        </div>
+                        <div class="detail-item">
+                            <label>Year Level</label>
+                            <p id="detailYearLevel">—</p>
+                        </div>
+                        <div class="detail-item">
+                            <label>Reason for Request</label>
+                            <p id="detailReason">—</p>
+                        </div>
+                        <div class="detail-item">
+                            <label>Submitted Date</label>
+                            <p id="detailSubmittedDate">—</p>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 30px; border-top: 1px solid var(--border-color); padding-top: 20px;">
+                        <h3 style="margin-top: 0; font-size: 16px;">Uploaded Documents</h3>
+                        <div class="files-grid">
+                            <div class="file-item">
+                                <label>Student Photo</label>
+                                <div id="photoPreview" class="file-preview">—</div>
+                            </div>
+                            <div class="file-item">
+                                <label>Document / COR</label>
+                                <div id="docPreview" class="file-preview">—</div>
+                            </div>
+                            <div class="file-item">
+                                <label>Signature</label>
+                                <div id="signPreview" class="file-preview">—</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-secondary" onclick="closeDetailsModal()">Close</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- HISTORY LOGS TAB -->
+        <div id="historyLogs" class="tab-section">
+            <div class="card">
+                <h2>Processed Requests History</h2>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Request ID</th>
+                                <th>Student Name</th>
+                                <th>Student ID</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th>Processed Date</th>
+                                <th>Handled By</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyTableBody">
+                            <!-- Rows populated by JavaScript -->
+                        </tbody>
+                    </table>
+                    <div id="noHistoryMessage" class="no-data" style="display: none;">
+                        <p>No processed requests found yet.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- REQUESTS MANAGEMENT TAB -->
+        <div id="requestsManagement" class="tab-section">
+
+        <!-- REQUEST PROGRESS TRACKER (Hidden for Admins) -->
+        <div class="card" id="progressTrackerCard">
+            <h2>Request Progress</h2>
+            <div class="progress-tracker">
+                <div class="progress-step" id="step-submitted">
+                    <div class="progress-icon">✓</div>
+                    <div class="progress-label">Submitted</div>
+                </div>
+                <div class="progress-step" id="step-verification">
+                    <div class="progress-icon">📋</div>
+                    <div class="progress-label">Verification</div>
+                </div>
+                <div class="progress-step" id="step-processing">
+                    <div class="progress-icon">⚙️</div>
+                    <div class="progress-label">Processing</div>
+                </div>
+                <div class="progress-step" id="step-ready">
+                    <div class="progress-icon">🏁</div>
+                    <div class="progress-label">Ready</div>
+                </div>
+                <div class="progress-step" id="step-rejected">
+                    <div class="progress-icon">✖️</div>
+                    <div class="progress-label">Rejected</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ANALYTICS STRIP -->
+        <div class="card">
+            <h2>Key Metrics</h2>
+            <div class="analytics-strip">
+                <div class="analytics-item">
+                    <div class="analytics-value" id="analyticsValue1">–</div>
+                    <div class="analytics-label" id="analyticsLabel1">My Active Requests</div>
+                    <div class="analytics-detail" id="analyticsDetail1">Current submissions</div>
+                </div>
+                <div class="analytics-item">
+                    <div class="analytics-value" id="analyticsValue2">2–3</div>
+                    <div class="analytics-label" id="analyticsLabel2">Average Processing Time</div>
+                    <div class="analytics-detail" id="analyticsDetail2">Working days</div>
+                </div>
+                <div class="analytics-item">
+                    <div class="analytics-value">✓</div>
+                    <div class="analytics-label">Process Verification</div>
+                    <div class="analytics-detail">Your data is secure</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- REQUESTS MANAGEMENT TAB CONTENT -->
+        <div class="card">
+            <h2>Request Details - Full Management</h2>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID Number</th>
+                            <th>Student Name</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th>Last Updated</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="requestsTableBody">
+                        <!-- Rows populated by JavaScript -->
+                    </tbody>
+                </table>
+                <div id="noRequestsMessage" class="no-data" style="display: none;">
+                    <p>No requests found.</p>
+                </div>
+            </div>
+        </div>
+        </div>
+
+        <!-- SETTINGS TAB -->
+        <div id="settingsSection" class="tab-section">
+            <div class="card">
+                <h2>Admin Settings</h2>
+                <div class="analytics-strip">
+                    <div class="analytics-item">
+                        <div class="analytics-label">Request Notifications</div>
+                        <div class="analytics-detail">Manage key notifications</div>
+                    </div>
+                    <div class="analytics-item">
+                        <div class="analytics-label">Request Management</div>
+                        <div class="analytics-detail">Control request routing</div>
+                    </div>
+                    <div class="analytics-item">
+                        <div class="analytics-label">User Accounts</div>
+                        <div class="analytics-detail">Manage account defaults</div>
+                    </div>
+                    <div class="analytics-item">
+                        <div class="analytics-label">Display</div>
+                        <div class="analytics-detail">Theme control</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Preferences</h2>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div>
+                        <h3 style="font-size: 16px; margin-bottom: 12px;">Notifications</h3>
+                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: var(--input-bg); border-radius: 8px; border: 1px solid var(--border-color);">
+                                <div>
+                                    <div style="font-weight: 600; margin-bottom: 4px;">New Request Alerts</div>
+                                    <div style="font-size: 12px; color: var(--muted);">Notify when new requests arrive</div>
+                                </div>
+                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                    <input type="checkbox" id="alertNewRequest" data-key="alertNewRequest" style="width: 18px; height: 18px; cursor: pointer;">
+                                </label>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: var(--input-bg); border-radius: 8px; border: 1px solid var(--border-color);">
+                                <div>
+                                    <div style="font-weight: 600; margin-bottom: 4px;">Verification Alerts</div>
+                                    <div style="font-size: 12px; color: var(--muted);">Notify when verification needed</div>
+                                </div>
+                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                    <input type="checkbox" id="alertVerification" data-key="alertVerification" style="width: 18px; height: 18px; cursor: pointer;">
+                                </label>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: var(--input-bg); border-radius: 8px; border: 1px solid var(--border-color);">
+                                <div>
+                                    <div style="font-weight: 600; margin-bottom: 4px;">Completion Alerts</div>
+                                    <div style="font-size: 12px; color: var(--muted);">Notify on completion/rejection</div>
+                                </div>
+                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                    <input type="checkbox" id="alertFinalStatus" data-key="alertFinalStatus" style="width: 18px; height: 18px; cursor: pointer;">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 style="font-size: 16px; margin-bottom: 12px;">Display & Management</h3>
+                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: var(--input-bg); border-radius: 8px; border: 1px solid var(--border-color);">
+                                <div>
+                                    <div style="font-weight: 600; margin-bottom: 4px;">Dark Mode</div>
+                                    <div style="font-size: 12px; color: var(--muted);">Enable dark theme</div>
+                                </div>
+                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                    <input type="checkbox" id="darkMode" data-key="darkMode" style="width: 18px; height: 18px; cursor: pointer;">
+                                </label>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: var(--input-bg); border-radius: 8px; border: 1px solid var(--border-color);">
+                                <div>
+                                    <div style="font-weight: 600; margin-bottom: 4px;">Auto-assign Requests</div>
+                                    <div style="font-size: 12px; color: var(--muted);">Automatically assign requests</div>
+                                </div>
+                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                    <input type="checkbox" id="autoAssign" data-key="autoAssign" style="width: 18px; height: 18px; cursor: pointer;">
+                                </label>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: var(--input-bg); border-radius: 8px; border: 1px solid var(--border-color);">
+                                <div>
+                                    <div style="font-weight: 600; margin-bottom: 4px;">Maintenance Mode</div>
+                                    <div style="font-size: 12px; color: var(--muted);">Disable new submissions</div>
+                                </div>
+                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                    <input type="checkbox" id="maintenanceMode" data-key="maintenanceMode" style="width: 18px; height: 18px; cursor: pointer;">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 12px; margin-top: 20px; align-items: center;">
+                <button class="btn-primary" onclick="saveAdminSettings()" style="border-radius: 8px; padding: 10px 16px;">Save Settings</button>
+                <a href="login.html" style="text-decoration: none; display: inline-flex; align-items: center; padding: 10px 16px; background: var(--accent-blue); color: white; border-radius: 8px; font-weight: 600; cursor: pointer;">Login</a>
+                <div id="lastSavedTimestamp" style="padding: 12px; color: var(--muted); font-size: 13px;">Preferences not saved yet.</div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    // ============================================
+    // TAB SWITCHING FOR ADMIN DASHBOARD
+    // ============================================
+
+    function switchAdminTab(tabName) {
+        const sections = {
+            dashboard: 'dashboardOverview',
+            history: 'historyLogs',
+            requests: 'requestsManagement',
+            studentRequests: 'studentRequestsSection',
+            adminRequests: 'adminRequestsSection',
+            settings: 'settingsSection'
+        };
+
+        const tabs = {
+            dashboard: 'dashboardTab',
+            history: 'historyTab',
+            requests: 'requestsTab',
+            studentRequests: 'studentRequestsTab',
+            settings: 'settingsTab'
+        };
+
+        Object.values(sections).forEach(sectionId => {
+            const section = document.getElementById(sectionId);
+            if (section) section.classList.remove('active');
+        });
+
+        Object.values(tabs).forEach(tabId => {
+            const tab = document.getElementById(tabId);
+            if (tab) tab.classList.remove('active');
+        });
+
+        const activeSection = document.getElementById(sections[tabName]);
+        if (activeSection) activeSection.classList.add('active');
+
+        const activeTab = document.getElementById(tabs[tabName]);
+        if (activeTab) activeTab.classList.add('active');
+
+        const pageTitle = document.getElementById('pageTitle');
+        if (pageTitle) {
+            if (tabName === 'dashboard') pageTitle.textContent = 'Dashboard';
+            else if (tabName === 'history') pageTitle.textContent = 'History';
+            else if (tabName === 'users') pageTitle.textContent = 'User Management';
+            else if (tabName === 'reports') pageTitle.textContent = 'Reports / Analytics';
+            else if (tabName === 'requests') pageTitle.textContent = 'Requests Management';
+            else if (tabName === 'studentRequests') pageTitle.textContent = 'Student Requests';
+            else if (tabName === 'settings') pageTitle.textContent = 'Settings';
+        }
+
+        if (tabName === 'dashboard') {
+            updateStatusCounts(); // Restore counts from localStorage
+            renderReportsAnalytics();
+        } else if (tabName === 'requests') {
+            populateRequestsTable(true); // Show all requests for admin
+        } else if (tabName === 'history') {
+            populateHistoryTable();
+        } else if (tabName === 'studentRequests') {
+            populateStudentRequestsTable();
+        } else if (tabName === 'settings') {
+            initializeSettingsPage();
+        }
+
+        logActivity('SWITCH_TAB', { tab: tabName });
+    }
+
+    // ============================================
+    // UTILITY & AUTH FUNCTIONS
+    // ============================================
+    
+    const BACKEND_BASE_URL = 'http://localhost:3000';
+    const ADMIN_TOKEN_KEY = 'adminToken';
+
+    function getAdminToken() {
+      return localStorage.getItem(ADMIN_TOKEN_KEY) || null;
+    }
+
+    function getAuthHeaders() {
+      const headers = { 'Content-Type': 'application/json' };
+      const token = getAdminToken();
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+      return headers;
+    }
+
+    function isAdminSessionActive() {
+      return Boolean(getAdminToken() && isAdmin());
+    }
+
+    async function validateAdminToken() {
+      const token = getAdminToken();
+      if (!token || !isAdmin()) {
+        return false;
+      }
+
+      try {
+        // Check local admin session instead of backend
+        const adminSession = localStorage.getItem('adminSession');
+        if (!adminSession) {
+          return false;
+        }
+        
+        const session = JSON.parse(adminSession);
+        return Boolean(session && session.token === token && session.verified);
+      } catch (error) {
+        console.warn('[Auth] Admin token validation failed:', error);
+        return false;
+      }
+    }
+
+    async function ensureAdminAuthenticated() {
+      const valid = await validateAdminToken();
+      if (!valid) {
+        localStorage.removeItem('adminToken');
+        localStorage.removeItem('adminSession');
+        localStorage.removeItem('user');
+        window.location.href = 'admin-login.html';
+        return false;
+      }
+      return true;
+    }
+
+    function logActivity(action, details) {
+        const timestamp = new Date().toISOString();
+        const user = getCurrentUser();
+        const logEntry = {
+            timestamp,
+            userId: user.studentId || user.id,
+            role: user.role,
+            action,
+            details
+        };
+        console.log('[AUDIT LOG]', logEntry);
+        
+        // Save activity to localStorage for persistence
+        try {
+            const stored = localStorage.getItem('activityHistory') || '[]';
+            const activityHistory = JSON.parse(stored);
+            activityHistory.push(logEntry);
+            localStorage.setItem('activityHistory', JSON.stringify(activityHistory));
+        } catch (error) {
+            console.error('Error logging activity to localStorage:', error);
+        }
+        // In production, send to backend: POST /api/logs
+    }
+
+    function buildLiveNotification(request, type, extra = {}) {
+        const titles = {
+            'request.new': 'New ID Request Submitted',
+            'request.processing': 'Request Processing',
+            'request.completed': 'Request Completed',
+            'request.rejected': 'Request Rejected'
+        };
+
+        const messages = {
+            'request.new': 'Your ID request has been received and is now under review.',
+            'request.processing': 'Your ID request is now being processed.',
+            'request.completed': 'Your ID request has been completed.',
+            'request.rejected': 'Your ID request has been rejected.'
+        };
+
+        const tones = {
+            'request.new': 'orange',
+            'request.processing': 'blue',
+            'request.completed': 'green',
+            'request.rejected': 'red'
+        };
+
+        const icons = {
+            'request.new': 'fa-file-circle-plus',
+            'request.processing': 'fa-spinner',
+            'request.completed': 'fa-circle-check',
+            'request.rejected': 'fa-circle-xmark'
+        };
+
+        const user = getCurrentUser();
+        const userId = user.studentId || user.id || request.studentId || 'unknown';
+
+        return {
+            userId,
+            type,
+            category: 'Request Updates',
+            title: titles[type] || titles['request.new'],
+            message: extra.message || messages[type] || messages['request.new'],
+            details: extra.details || `${request.studentName || request.fullName || 'A student'} submitted a ${request.type || 'request'}.`,
+            tone: tones[type] || 'orange',
+            icon: icons[type] || 'fa-bell',
+            sourceId: request.id,
+            status: 'unread'
+        };
+    }
+
+    async function sendLiveNotification(notification) {
+        try {
+            await fetch(`${BACKEND_BASE_URL}/notifications`, {
+                method: 'POST',
+                headers: getAuthHeaders(),
+                body: JSON.stringify(notification)
+            });
+        } catch (error) {
+            console.warn('Failed to send live notification', error);
+        }
+    }
+
+    async function createBackendRequest(request) {
+        try {
+            const response = await fetch(`${BACKEND_BASE_URL}/api/requests`, {
+                method: 'POST',
+                headers: getAuthHeaders(),
+                body: JSON.stringify(request)
+            });
+            if (!response.ok) throw new Error(`Create request failed: ${response.status}`);
+            const payload = await response.json();
+            return payload.request || null;
+        } catch (error) {
+            console.warn('Failed to create request on backend', error);
+            return null;
+        }
+    }
+
+    async function updateBackendRequestStatus(requestId, status, extra = {}) {
+        try {
+            const user = getCurrentUser();
+            const actorRole = user.role || user.accountType || 'student';
+            const updatedBy = user.username || user.email || user.id || user.name || 'admin';
+            
+            console.log(`[updateBackendRequestStatus] Attempting to update ${requestId} to ${status} with role ${actorRole}`);
+            
+            const response = await fetch(`${BACKEND_BASE_URL}/api/requests/${encodeURIComponent(requestId)}/status`, {
+                method: 'PATCH',
+                headers: getAuthHeaders(),
+                body: JSON.stringify({ status, actorRole, updatedBy, ...extra })
+            });
+            
+            const text = await response.text();
+            console.log(`[updateBackendRequestStatus] Response status: ${response.status}, body: ${text}`);
+            
+            if (!response.ok) {
+                console.error('Status update error:', text);
+                throw new Error(`Status update failed: ${response.status} - ${text}`);
+            }
+            
+            const payload = JSON.parse(text);
+            console.log('[updateBackendRequestStatus] Success:', payload);
+            return payload.request || null;
+        } catch (error) {
+            console.error('Failed to update request status on backend:', error);
+            throw error; // Re-throw so caller can handle
+        }
+    }
+
+    async function fetchRequestStatus(requestId) {
+        try {
+            const response = await fetch(`${BACKEND_BASE_URL}/api/requests/${encodeURIComponent(requestId)}/status`, {
+            headers: getAuthHeaders()
+        });
+            if (!response.ok) {
+                throw new Error(`Status lookup failed: ${response.status}`);
+            }
+            return await response.json();
+        } catch (error) {
+            console.warn('Failed to fetch request status', error);
+            return null;
+        }
+    }
+
+    async function syncRequestsFromBackend() {
+        const user = getCurrentUser();
+        const query = user.studentId ? `?userId=${encodeURIComponent(user.studentId)}` : '';
+        try {
+            const response = await fetch(`${BACKEND_BASE_URL}/api/requests${query}`, {
+                headers: getAuthHeaders()
+            });
+            if (!response.ok) throw new Error(`Unable to load requests: ${response.status}`);
+            const backendRequests = await response.json();
+            if (Array.isArray(backendRequests)) {
+                localStorage.setItem('requests', JSON.stringify(backendRequests));
+                return backendRequests;
+            }
+        } catch (error) {
+            console.warn('Request sync failed, falling back to local storage', error);
+        }
+        return getAllRequests();
+    }
+
+    async function fetchRequestStatusSummary() {
+        const user = getCurrentUser();
+        const query = user.studentId ? `?userId=${encodeURIComponent(user.studentId)}` : '';
+        try {
+            const response = await fetch(`${BACKEND_BASE_URL}/api/requests/status-summary${query}`, {
+                headers: getAuthHeaders()
+            });
+            if (!response.ok) {
+                throw new Error(`Status summary lookup failed: ${response.status}`);
+            }
+            const summary = await response.json();
+            if (summary && typeof summary === 'object') {
+                document.getElementById('countSubmitted').textContent = summary.submitted || 0;
+                document.getElementById('countProcessing').textContent = summary.processing || 0;
+                document.getElementById('countCompleted').textContent = summary.completed || 0;
+                document.getElementById('countRejected').textContent = summary.rejected || 0;
+
+                updateProgressTracker(summary.latestStatus || 'submitted');
+                updateNewRequestButtonState(summary);
+            }
+            return summary;
+        } catch (error) {
+            console.warn('Failed to fetch status summary', error);
+            updateStatusCounts();
+            const latest = getLatestRequest();
+            updateProgressTracker(latest ? latest.status : 'submitted');
+            updateNewRequestButtonState();
+            return null;
+        }
+    }
+
+    function updateNewRequestButtonState(summary) {
+        const button = document.getElementById('openNewRequestBtn');
+        const notice = document.getElementById('requestBlockedNotice');
+        if (!button || !notice) return;
+
+        if (isAdmin()) {
+            button.classList.remove('disabled');
+            button.setAttribute('href', '#');
+            notice.classList.add('hidden');
+            notice.textContent = '';
+            return;
+        }
+
+        const hasActive = summary
+            ? ((summary.submitted || 0) > 0 || (summary.pending || 0) > 0)
+            : getVisibleRequests().some(req => ['submitted', 'verification', 'processing'].includes((req.status || '').toLowerCase()));
+
+        if (hasActive) {
+            button.classList.add('disabled');
+            button.removeAttribute('href');
+            notice.textContent = 'You already have an active ID request. Please wait until it is completed or rejected before submitting another.';
+            notice.classList.remove('hidden');
+        } else {
+            button.classList.remove('disabled');
+            button.setAttribute('href', '#');
+            notice.classList.add('hidden');
+            notice.textContent = '';
+        }
+    }
+
+    function setNewRequestBlockMessage(message) {
+        const notice = document.getElementById('requestBlockedNotice');
+        if (!notice) return;
+        notice.textContent = message || 'You already have an active ID request. Please wait until it is completed or rejected before submitting another.';
+        notice.classList.remove('hidden');
+    }
+
+    function getCurrentUser() {
+        try {
+            const user = JSON.parse(localStorage.getItem('user')) || {};
+            return user;
+        } catch (e) {
+            return {};
+        }
+    }
+
+    function isAdmin() {
+        const user = getCurrentUser();
+        return user.role === 'admin' || user.accountType === 'admin';
+    }
+
+    function getCurrentStudentId() {
+        const user = getCurrentUser();
+        return user.studentId || null;
+    }
+
+    function logout() {
+        logActivity('LOGOUT', { timestamp: new Date().toLocaleString() });
+        localStorage.removeItem('user');
+        localStorage.removeItem('adminToken');
+        localStorage.removeItem('adminSession');
+        window.location.href = 'admin-login.html';
+    }
+
+    // ============================================
+    // DATA MANAGEMENT FUNCTIONS
+    // ============================================
+
+    function getAllRequests() {
+        try {
+            const stored = localStorage.getItem('requests');
+            return stored ? JSON.parse(stored) : [];
+        } catch (e) {
+            return [];
+        }
+    }
+
+    function getVisibleRequests() {
+        const allRequests = getAllRequests();
+        const admin = isAdmin();
+        const currentStudentId = getCurrentStudentId();
+
+        if (admin) {
+            return allRequests;
+        } else {
+            // For students: return only the most recent request
+            const studentRequests = allRequests.filter(req => req.studentId === currentStudentId);
+            if (studentRequests.length === 0) return [];
+            return [studentRequests[0]]; // Most recent is first since requests are unshifted on creation
+        }
+    }
+
+    function getLatestRequest() {
+        const requests = getVisibleRequests();
+        return requests
+            .slice()
+            .sort((a, b) => new Date(b.createdAt || b.lastUpdated || Date.now()) - new Date(a.createdAt || a.lastUpdated || Date.now()))[0] || null;
+    }
+
+    // ============================================
+    // STATUS & DISPLAY FUNCTIONS
+    // ============================================
+
+    function getProgressStage(status) {
+        const statusLower = (status || '').toLowerCase();
+        if (statusLower === 'submitted') return 'submitted';
+        if (statusLower === 'pending' || statusLower === 'verification') return 'verification';
+        if (statusLower === 'processing') return 'processing';
+        if (statusLower === 'ready' || statusLower === 'completed') return 'ready';
+        if (statusLower === 'rejected') return 'rejected';
+        return 'submitted';
+    }
+
+    function updateProgressTracker(status) {
+        const stage = getProgressStage(status);
+        const stages = ['submitted', 'verification', 'processing', 'ready', 'rejected'];
+
+        stages.forEach(s => {
+            const element = document.getElementById(`step-${s}`);
+            if (element) {
+                if (s === stage) {
+                    element.classList.add('active');
+                } else {
+                    element.classList.remove('active');
+                }
+            }
+        });
+    }
+
+    function getStatusBadge(status) {
+        const statusLower = (status || '').toLowerCase();
+        let badgeClass = 'status-pending';
+        let displayStatus = 'Pending';
+
+        if (statusLower === 'submitted') {
+            badgeClass = 'status-pending';
+            displayStatus = 'Submitted';
+        } else if (statusLower === 'pending' || statusLower === 'verification' || statusLower === 'processing') {
+            badgeClass = 'status-pending';
+            displayStatus = 'Pending';
+        } else if (statusLower === 'ready' || statusLower === 'completed') {
+            badgeClass = 'status-completed';
+            displayStatus = 'Completed';
+        } else if (statusLower === 'rejected') {
+            badgeClass = 'status-rejected';
+            displayStatus = 'Rejected';
+        }
+
+        return `<span class="status-badge ${badgeClass}"><i class="fa-solid fa-circle-check" style="font-size: 10px;"></i> ${displayStatus}</span>`;
+    }
+
+    function getActionButtons(requestId, status, isAdminUser) {
+        // Students should not see any action buttons - return empty string
+        if (!isAdminUser) {
+            return '';
+        }
+
+        const baseActions = `<a href="#" class="action-btn" onclick="viewRequest('${requestId}'); return false;">View</a>`;
+        const rejectButton = ` <a href="#" class="action-btn danger" onclick="rejectRequest('${requestId}'); return false;">Reject</a>`;
+        const statusLower = (status || '').toLowerCase();
+
+        if (statusLower === 'submitted' || statusLower === 'pending') {
+            return baseActions +
+                ` <a href="#" class="action-btn success" onclick="verifyRequest('${requestId}'); return false;">Begin Verification</a>` +
+                rejectButton;
+        }
+        if (statusLower === 'verification') {
+            return baseActions +
+                ` <a href="#" class="action-btn success" onclick="processRequest('${requestId}'); return false;">Start Processing</a>` +
+                rejectButton;
+        }
+        if (statusLower === 'processing') {
+            return baseActions +
+                ` <a href="#" class="action-btn success" onclick="completeRequest('${requestId}'); return false;">Mark Ready</a>` +
+                rejectButton;
+        }
+
+        return baseActions;
+    }
+
+    function applyUpdatedRequest(updated) {
+        if (!updated) return;
+        const requests = getAllRequests();
+        const index = requests.findIndex(r => r.id === updated.id);
+        if (index !== -1) {
+            requests[index] = updated;
+        } else {
+            requests.unshift(updated);
+        }
+        localStorage.setItem('requests', JSON.stringify(requests));
+        populateRequestsTable();
+        updateStatusCounts();
+        updateProgressTracker(updated.status);
+        fetchRequestStatusSummary();
+    }
+
+    // ============================================
+    // ACTION HANDLERS
+    // ============================================
+
+    async function viewRequest(requestId) {
+        logActivity('VIEW_REQUEST', { requestId });
+        const request = getAllRequests().find(r => r.id === requestId);
+        if (!request) {
+            alert('Request not found.');
+            return;
+        }
+        
+        // Display request details in an alert
+        const details = `
+=== REQUEST DETAILS ===
+Request ID: ${request.id}
+Student: ${request.studentName || 'N/A'}
+Student ID: ${request.studentId || 'N/A'}
+Type: ${request.type || 'N/A'}
+Status: ${request.status || 'N/A'}
+Created: ${request.createdAt || 'N/A'}
+Updated: ${request.updatedAt || 'N/A'}
+        `;
+        alert(details);
+    }
+
+    function updateRequest(requestId) {
+        openEditRequestModal(requestId);
+    }
+
+    function openEditRequestModal(requestId) {
+        const request = getAllRequests().find(r => r.id === requestId);
+        if (!request) return;
+
+        openNewRequestModal();
+        document.getElementById('requestId').value = request.id;
+        document.getElementById('requestFullName').value = request.studentName || '';
+        document.getElementById('requestStudentId').value = request.studentId || '';
+        document.getElementById('requestType').value = request.type || '';
+        document.getElementById('requestPhoto').value = '';
+        document.getElementById('newRequestTitle').textContent = 'Update Request';
+        document.getElementById('submitRequestBtn').textContent = 'Save Changes';
+        document.getElementById('requestStudentId').disabled = true;
+    }
+
+    async function verifyRequest(requestId) {
+        logActivity('VERIFY_REQUEST', { requestId });
+        if (!isAdmin()) {
+            alert('Only admins can verify requests');
+            return;
+        }
+        try {
+            console.log(`[verifyRequest] Starting verification for ${requestId}`);
+            const updated = await updateBackendRequestStatus(requestId, 'Processing');
+            if (updated) {
+                applyUpdatedRequest(updated);
+                console.log(`[Admin Action] Request ${requestId} moved to Processing`);
+                alert('✓ Request moved to Processing stage. Student will be notified automatically.');
+                // Trigger real-time update via WebSocket broadcast
+                await syncRequestsFromBackend();
+                await fetchRequestStatusSummary();
+                populateRequestsTable();
+            } else {
+                alert('⚠ No response from server. Request may not have been updated.');
+            }
+        } catch (error) {
+            console.error('[verifyRequest] Error:', error);
+            alert(`✗ Failed to verify request: ${error.message}\n\nMake sure the server is running on http://localhost:3000`);
+        }
+    }
+
+    async function processRequest(requestId) {
+        logActivity('PROCESS_REQUEST', { requestId });
+        if (!isAdmin()) {
+            alert('Only admins can process requests');
+            return;
+        }
+        try {
+            console.log(`[processRequest] Starting processing for ${requestId}`);
+            const updated = await updateBackendRequestStatus(requestId, 'Processing');
+            if (updated) {
+                applyUpdatedRequest(updated);
+                console.log(`[Admin Action] Request ${requestId} moved to Processing`);
+                alert('✓ Request moved to Processing stage. Student will be notified automatically.');
+                // Trigger real-time update via WebSocket broadcast
+                await syncRequestsFromBackend();
+                await fetchRequestStatusSummary();
+                populateRequestsTable();
+            } else {
+                alert('⚠ No response from server. Request may not have been updated.');
+            }
+        } catch (error) {
+            console.error('[processRequest] Error:', error);
+            alert(`✗ Failed to process request: ${error.message}\n\nMake sure the server is running on http://localhost:3000`);
+        }
+    }
+
+    async function completeRequest(requestId) {
+        logActivity('COMPLETE_REQUEST', { requestId });
+        if (!isAdmin()) {
+            alert('Only admins can complete requests');
+            return;
+        }
+        try {
+            console.log(`[completeRequest] Completing request ${requestId}`);
+            const updated = await updateBackendRequestStatus(requestId, 'Completed');
+            if (updated) {
+                applyUpdatedRequest(updated);
+                console.log(`[Admin Action] Request ${requestId} moved to Completed`);
+                alert('✓ Request marked as Completed. Student will be notified automatically.');
+                // Trigger real-time update via WebSocket broadcast
+                await syncRequestsFromBackend();
+                await fetchRequestStatusSummary();
+                populateRequestsTable();
+            } else {
+                alert('⚠ No response from server. Request may not have been updated.');
+            }
+        } catch (error) {
+            console.error('[completeRequest] Error:', error);
+            alert(`✗ Failed to complete request: ${error.message}\n\nMake sure the server is running on http://localhost:3000`);
+        }
+    }
+
+    async function approveRequest(requestId) {
+        logActivity('APPROVE_REQUEST', { requestId });
+        await completeRequest(requestId);
+    }
+
+    async function rejectRequest(requestId) {
+        logActivity('REJECT_REQUEST', { requestId });
+        if (!isAdmin()) {
+            alert('Only admins can reject requests');
+            return;
+        }
+        const reason = prompt('Enter rejection reason (optional):');
+        if (reason === null) return; // User cancelled
+        
+        try {
+            console.log(`[rejectRequest] Rejecting request ${requestId}`);
+            const updated = await updateBackendRequestStatus(requestId, 'Rejected', {
+                details: reason || 'Your request has been declined by the review team.'
+            });
+            if (updated) {
+                applyUpdatedRequest(updated);
+                console.log(`[Admin Action] Request ${requestId} rejected`);
+                alert('✓ Request rejected. Student will be notified automatically.');
+                // Trigger real-time update via WebSocket broadcast
+                await syncRequestsFromBackend();
+                await fetchRequestStatusSummary();
+                populateRequestsTable();
+            } else {
+                alert('⚠ No response from server. Request may not have been updated.');
+            }
+        } catch (error) {
+            console.error('[rejectRequest] Error:', error);
+            alert(`✗ Failed to reject request: ${error.message}\n\nMake sure the server is running on http://localhost:3000`);
+        }
+    }
+
+    // ============================================
+    // TABLE POPULATION
+    // ============================================
+
+    function populateRequestsTable(showAllRequests = false) {
+        const tbody = document.getElementById('requestsTableBody');
+        const noDataMsg = document.getElementById('noRequestsMessage');
+        const isAdminUser = isAdmin();
+        
+        // For Requests Management tab, show all requests; otherwise show visible requests
+        const requests = showAllRequests && isAdminUser ? getAllRequests() : getVisibleRequests();
+        
+        const table = tbody.closest('table');
+        const thead = table.querySelector('thead');
+        const actionsHeader = table.querySelector('thead th:last-child');
+
+        // Update table header for admin view
+        if (isAdminUser && showAllRequests) {
+            // Update headers to include Student Name for full admin view
+            const headers = thead.querySelectorAll('th');
+            if (headers.length >= 5) {
+                headers[1].textContent = 'Student Name';
+                headers[2].textContent = 'Type';
+                headers[3].textContent = 'Status';
+                headers[4].textContent = 'Last Updated';
+                headers[5].textContent = 'Actions';
+            }
+        }
+
+        // Show/hide Actions header
+        if (actionsHeader) {
+            actionsHeader.style.display = isAdminUser ? '' : 'none';
+        }
+
+        tbody.innerHTML = '';
+
+        if (requests.length === 0) {
+            noDataMsg.style.display = 'block';
+            return;
+        }
+
+        noDataMsg.style.display = 'none';
+
+        requests.forEach(req => {
+            const row = document.createElement('tr');
+            const idNumber = req.studentId || 'N/A';
+            const studentName = req.studentName || 'Unknown Student';
+            const requestType = req.type || 'School ID';
+            const status = getStatusBadge(req.status);
+            const lastUpdated = req.updatedAt ? new Date(req.updatedAt).toLocaleDateString() : new Date().toLocaleDateString();
+            const actions = getActionButtons(req.id, req.status, isAdminUser);
+
+            // For admin in Requests Management tab, show full details with student name
+            if (isAdminUser && showAllRequests) {
+                row.innerHTML = `
+                    <td>${idNumber}</td>
+                    <td>${studentName}</td>
+                    <td>${requestType}</td>
+                    <td>${status}</td>
+                    <td>${lastUpdated}</td>
+                    <td style="white-space: nowrap;">${actions}</td>
+                `;
+            } else if (isAdminUser) {
+                // Admin in Dashboard view
+                row.innerHTML = `
+                    <td>${idNumber}</td>
+                    <td>${requestType}</td>
+                    <td>${status}</td>
+                    <td>${lastUpdated}</td>
+                    <td style="white-space: nowrap;">${actions}</td>
+                `;
+            } else {
+                // Student view (no actions)
+                row.innerHTML = `
+                    <td>${idNumber}</td>
+                    <td>${requestType}</td>
+                    <td>${status}</td>
+                    <td>${lastUpdated}</td>
+                `;
+            }
+            tbody.appendChild(row);
+        });
+    }
+
+    // ============================================
+    // STATUS COUNTS & ANALYTICS
+    // ============================================
+
+    function updateStatusCounts(summary) {
+        const storedRequests = localStorage.getItem('requests');
+        const allRequests = storedRequests ? JSON.parse(storedRequests) : [];
+
+        let counts = {
+            submitted: 0,
+            processing: 0,
+            completed: 0,
+            rejected: 0
+        };
+
+        allRequests.forEach(req => {
+            const status = (req.status || '').toLowerCase();
+            if (status === 'processing') {
+                counts.processing++;
+            } else if (status === 'completed') {
+                counts.completed++;
+            } else if (status === 'rejected') {
+                counts.rejected++;
+            }
+        });
+
+        counts.submitted = allRequests.length;
+
+        document.getElementById('countSubmitted').textContent = counts.submitted;
+        document.getElementById('countProcessing').textContent = counts.processing;
+        document.getElementById('countCompleted').textContent = counts.completed;
+        document.getElementById('countRejected').textContent = counts.rejected;
+    }
+
+
+    function getAllUsers() {
+        try {
+            const stored = localStorage.getItem('users');
+            if (stored) {
+                return JSON.parse(stored);
+            }
+        } catch (error) {
+            console.warn('Failed to parse users from localStorage', error);
+        }
+
+        const requestUsers = getAllRequests().map(req => ({
+            id: req.studentId || `student-${req.id || Math.random().toString(36).slice(2, 8)}`,
+            name: req.studentName || 'Unknown Student',
+            email: req.email || `${req.studentId || 'student'}@school.edu`,
+            status: ['rejected'].includes((req.status || '').toLowerCase()) ? 'Inactive' : 'Active',
+            role: 'student'
+        }));
+
+        const unique = {};
+        return requestUsers.filter(user => {
+            if (!unique[user.id]) {
+                unique[user.id] = true;
+                return true;
+            }
+            return false;
+        });
+    }
+
+
+
+    function populateStudentRequestsTable() {
+        const tbody = document.getElementById('studentRequestsTableBody');
+        const noDataMsg = document.getElementById('noStudentRequestsMessage');
+        
+        try {
+            const storedRequests = localStorage.getItem('requests');
+            const allRequests = storedRequests ? JSON.parse(storedRequests) : [];
+            
+            tbody.innerHTML = '';
+            
+            if (allRequests.length === 0) {
+                noDataMsg.style.display = 'block';
+                return;
+            } else {
+                noDataMsg.style.display = 'none';
+            }
+            
+            allRequests.forEach((req, index) => {
+                const row = tbody.insertRow();
+                const statusClass = `status-${(req.status || 'pending').toLowerCase()}`;
+                const statusLabel = (req.status || 'pending').charAt(0).toUpperCase() + (req.status || 'pending').slice(1);
+                const submittedDate = new Date(req.submittedAt || req.date || '').toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' });
+                
+                row.innerHTML = `
+                    <td><strong>${req.id || 'N/A'}</strong></td>
+                    <td>${req.studentName || req.fullName || 'Unknown'}</td>
+                    <td>${req.studentId || 'N/A'}</td>
+                    <td>${req.type || 'Student ID Request'}</td>
+                    <td>${submittedDate}</td>
+                    <td>
+                        <select class="status-select" data-request-id="${req.id}" onchange="updateRequestStatus('${req.id}', this.value)">
+                            <option value="pending" ${req.status === 'pending' ? 'selected' : ''}>Pending</option>
+                            <option value="processing" ${req.status === 'processing' ? 'selected' : ''}>Processing</option>
+                            <option value="completed" ${req.status === 'completed' ? 'selected' : ''}>Completed</option>
+                            <option value="rejected" ${req.status === 'rejected' ? 'selected' : ''}>Rejected</option>
+                        </select>
+                    </td>
+                    <td style="display: flex; gap: 6px;">
+                        <button class="action-btn" onclick="viewRequestDetails('${req.id}')" style="color: var(--accent-blue);">View</button>
+                        <button class="action-btn success" onclick="saveRequestStatus('${req.id}')">Save</button>
+                    </td>
+                `;
+            });
+        } catch (error) {
+            console.error('Error loading student requests:', error);
+            noDataMsg.style.display = 'block';
+        }
+    }
+
+    function updateRequestStatus(requestId, newStatus) {
+        // This function is called when the select dropdown changes
+        // We'll save it when the Save button is clicked
+    }
+
+    function saveRequestStatus(requestId) {
+        try {
+            const selectElement = document.querySelector(`select[data-request-id="${requestId}"]`);
+            if (!selectElement) return;
+            
+            const newStatus = selectElement.value;
+            const storedRequests = localStorage.getItem('requests');
+            const allRequests = storedRequests ? JSON.parse(storedRequests) : [];
+            
+            // Find and update the request
+            const requestIndex = allRequests.findIndex(r => r.id === requestId);
+            if (requestIndex !== -1) {
+                const oldStatus = allRequests[requestIndex].status;
+                allRequests[requestIndex].status = newStatus;
+                allRequests[requestIndex].updatedAt = new Date().toISOString();
+                localStorage.setItem('requests', JSON.stringify(allRequests));
+                
+                // Log the status change to activity history
+                logActivity('UPDATE_REQUEST_STATUS', { 
+                    requestId: requestId,
+                    oldStatus: oldStatus,
+                    newStatus: newStatus,
+                    studentName: allRequests[requestIndex].studentName || 'Unknown',
+                    studentId: allRequests[requestIndex].studentId || 'Unknown'
+                });
+                
+                // Verify activity was saved
+                const verify = localStorage.getItem('activityHistory');
+                console.log('Activity saved. Current activity history:', verify);
+                
+                alert(`Request ${requestId} status updated to ${newStatus}`);
+                populateStudentRequestsTable(); // Refresh the table
+                updateStatusCounts(); // Update the Request Status Overview
+            }
+        } catch (error) {
+            console.error('Error saving request status:', error);
+            alert('Error updating request status');
+        }
+    }
+
+    function clearAllStudentRequests() {
+        if (!confirm('Are you sure you want to clear ALL student requests? This action cannot be undone.')) {
+            return;
+        }
+        
+        try {
+            localStorage.setItem('requests', JSON.stringify([]));
+            populateStudentRequestsTable();
+            alert('All student requests have been cleared.');
+            logActivity('CLEAR_ALL_REQUESTS', { message: 'All student requests cleared' });
+        } catch (error) {
+            console.error('Error clearing requests:', error);
+            alert('Error clearing requests');
+        }
+    }
+
+    function populateHistoryTable() {
+        const tbody = document.getElementById('historyTableBody');
+        const noDataMsg = document.getElementById('noHistoryMessage');
+        const processed = getAllRequests().filter(req => {
+            const status = (req.status || '').toLowerCase();
+            return ['ready', 'completed', 'rejected'].includes(status);
+        }).sort((a, b) => new Date(b.updatedAt || b.createdAt || 0) - new Date(a.updatedAt || a.createdAt || 0));
+
+        tbody.innerHTML = '';
+        if (processed.length === 0) {
+            noDataMsg.style.display = 'block';
+            return;
+        }
+
+        noDataMsg.style.display = 'none';
+        processed.forEach(req => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${req.id || 'N/A'}</td>
+                <td>${req.studentName || 'Unknown'}</td>
+                <td>${req.studentId || 'N/A'}</td>
+                <td>${req.type || 'School ID'}</td>
+                <td>${(req.status || 'Completed').charAt(0).toUpperCase() + (req.status || 'Completed').slice(1)}</td>
+                <td>${req.updatedAt || req.createdAt || 'N/A'}</td>
+                <td>${req.handledBy || 'Admin Team'}</td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+
+    function populateUserManagementTable() {
+        const tbody = document.getElementById('userManagementBody');
+        const noDataMsg = document.getElementById('noUsersMessage');
+        const users = getAllUsers();
+
+        tbody.innerHTML = '';
+        if (users.length === 0) {
+            noDataMsg.style.display = 'block';
+            return;
+        }
+
+        noDataMsg.style.display = 'none';
+        users.forEach(user => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${user.id || 'N/A'}</td>
+                <td>${user.name || 'Unnamed User'}</td>
+                <td>${user.email || 'unknown@school.edu'}</td>
+                <td>${user.status || 'Active'}</td>
+                <td style="white-space: nowrap;">
+                    <a href="#" class="action-btn" onclick="viewUserProfile('${user.id}'); return false;">View</a>
+                    <a href="#" class="action-btn" onclick="manageUserProfile('${user.id}'); return false;">Manage</a>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+
+    function renderReportsAnalytics() {
+        const requests = getAllRequests();
+        const totalRequests = requests.length;
+        const processed = requests.filter(req => ['ready', 'completed', 'rejected'].includes((req.status || '').toLowerCase()));
+        const rejected = requests.filter(req => (req.status || '').toLowerCase() === 'rejected').length;
+        const averageDays = getAverageProcessingTime(processed);
+        const rejectionRate = processed.length ? Math.round((rejected / processed.length) * 100) : 0;
+
+        document.getElementById('reportTotalRequests').textContent = totalRequests;
+        document.getElementById('reportAvgProcessingTime').textContent = `${averageDays} days`;
+        document.getElementById('reportRejectionRate').textContent = `${rejectionRate}%`;
+        document.getElementById('reportSecurityStatus').textContent = 'Secure';
+    }
+
+    function getAverageProcessingTime(requests) {
+        if (!requests.length) return 0;
+        const totalDays = requests.reduce((sum, req) => {
+            const created = new Date(req.createdAt || Date.now());
+            const updated = new Date(req.updatedAt || req.createdAt || Date.now());
+            const days = Math.max(0, (updated - created) / (1000 * 60 * 60 * 24));
+            return sum + days;
+        }, 0);
+        return Math.round(totalDays / requests.length) || 0;
+    }
+
+    function viewUserProfile(userId) {
+        const users = getAllUsers();
+        const user = users.find(u => u.id === userId);
+        if (!user) {
+            alert('User profile not found.');
+            return;
+        }
+
+        alert(`Student Profile:\n\nID: ${user.id}\nName: ${user.name}\nEmail: ${user.email}\nStatus: ${user.status}`);
+    }
+
+    function manageUserProfile(userId) {
+        logActivity('MANAGE_USER_PROFILE', { userId });
+        alert(`Open the profile management workflow for ${userId}.`);
+    }
+
+    // ============================================
+    // INITIALIZATION
+    // ============================================
+
+    // ============================================
+    // WEBSOCKET LIVE UPDATES FOR STATUS CHANGES
+    // ============================================
+
+    let dashboardWs = null;
+
+    function connectDashboardWebSocket() {
+        try {
+            const wsProtocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+            const wsHost = window.location.hostname;
+            const wsPort = 3000; // Backend server port
+            const wsUrl = `${wsProtocol}://${wsHost}:${wsPort}/ws`;
+
+            dashboardWs = new WebSocket(wsUrl);
+
+            dashboardWs.onopen = () => {
+                console.log('[Dashboard WS] Connected to live updates');
+                logActivity('DASHBOARD_WS_CONNECTED', { timestamp: new Date().toLocaleString() });
+                const user = getCurrentUser();
+                if (user) {
+                    dashboardWs.send(JSON.stringify({ type: 'identify', role: user.role || user.accountType || 'admin', userId: user.studentId || user.id || null }));
+                }
+            };
+
+            dashboardWs.onmessage = async (event) => {
+                try {
+                    const data = JSON.parse(event.data);
+                    const user = getCurrentUser();
+                    const currentUserId = user.studentId || user.id;
+
+                    // Only process status change events for the current user or if admin
+                    if (data.type && (data.type.startsWith('request.') || data.category === 'Request Updates')) {
+                        if (isAdmin() || data.userId === currentUserId) {
+                            console.log('[Dashboard WS] Received status update:', data);
+
+                            // Refresh request data and UI
+                            await syncRequestsFromBackend();
+                            await fetchRequestStatusSummary();
+                            populateRequestsTable();
+                            updateAnalytics();
+
+                            logActivity('DASHBOARD_STATUS_SYNCED', {
+                                type: data.type,
+                                sourceId: data.sourceId,
+                                timestamp: new Date().toLocaleString()
+                            });
+                        }
+                    }
+                } catch (error) {
+                    console.warn('[Dashboard WS] Error processing message:', error);
+                }
+            };
+
+            dashboardWs.onerror = (error) => {
+                console.warn('[Dashboard WS] Error:', error);
+            };
+
+            dashboardWs.onclose = () => {
+                console.log('[Dashboard WS] Disconnected. Attempting to reconnect in 3 seconds...');
+                setTimeout(connectDashboardWebSocket, 3000);
+            };
+        } catch (error) {
+            console.warn('[Dashboard WS] Failed to connect:', error);
+        }
+    }
+
+    // ============================================
+    // INITIALIZATION
+    // ============================================
+
+    // Ensure critical localStorage arrays exist
+    if (!localStorage.getItem('requests')) {
+        localStorage.setItem('requests', JSON.stringify([]));
+    }
+    if (!localStorage.getItem('activityHistory')) {
+        localStorage.setItem('activityHistory', JSON.stringify([]));
+    }
+
+    window.addEventListener('DOMContentLoaded', async () => {
+        // Load dark mode preference from localStorage
+        const darkModeEnabled = localStorage.getItem('pref-darkMode') === '1';
+        if (darkModeEnabled) {
+            document.body.classList.add('dark-mode');
+        }
+
+        if (!(await ensureAdminAuthenticated())) {
+            return;
+        }
+
+        const userStr = localStorage.getItem('user');
+
+        if (userStr) {
+            const currentUser = JSON.parse(userStr);
+            const userSurname = currentUser.surname || currentUser.lastName || currentUser.firstName || 'Student';
+            const isAdminUser = isAdmin();
+
+            // Update role label and greeting
+            if (isAdminUser) {
+                document.getElementById('roleLabel').textContent = 'Admin Services';
+                document.getElementById('welcomeMsg').textContent =
+                    `Welcome back, ADMIN! Manage all student ID requests and track their status.`;
+                // Hide +New Request button and Progress Tracker for admins
+                document.getElementById('openNewRequestBtn').style.display = 'none';
+                document.getElementById('progressTrackerCard').style.display = 'none';
+            } else {
+                document.getElementById('roleLabel').textContent = 'Admin Services';
+                document.getElementById('welcomeMsg').innerText =
+                    `Welcome back, ${userSurname}! Check your request status and submit new requests.`;
+                // Show +New Request button and Progress Tracker for students
+                document.getElementById('openNewRequestBtn').style.display = 'inline-flex';
+                document.getElementById('progressTrackerCard').style.display = 'block';
+            }
+
+            logActivity('DASHBOARD_LOAD', {
+                userRole: isAdminUser ? 'admin' : 'student',
+                timestamp: new Date().toLocaleString()
+            });
+        }
+
+        // Connect to WebSocket for live status updates
+        connectDashboardWebSocket();
+
+        // Sync dashboard requests with the backend before rendering
+        await syncRequestsFromBackend();
+        await fetchRequestStatusSummary();
+
+        // Populate dashboard data
+        const isAdminUser = isAdmin();
+        if (isAdminUser) {
+            // For admin, show Dashboard Overview tab initially
+            switchAdminTab('dashboard');
+        } else {
+            // For student, show normal dashboard view
+            populateRequestsTable();
+        }
+        updateAnalytics();
+    });
+
+    async function openNewRequestModal(event) {
+      if (event && event.preventDefault) {
+        event.preventDefault();
+      }
+      const summary = await fetchRequestStatusSummary();
+      const hasActive = summary && ((summary.submitted || 0) > 0 || (summary.pending || 0) > 0);
+      if (!isAdmin() && hasActive) {
+        setNewRequestBlockMessage('You already have an active ID request. Please wait until it is completed or rejected before submitting another.');
+        return;
+      }
+      document.getElementById('newRequestModal').classList.add('active');
+      resetNewRequestForm();
+    }
+
+    function closeNewRequestModal() {
+        document.getElementById('newRequestModal').classList.remove('active');
+    }
+
+    function resetNewRequestForm() {
+        document.getElementById('newRequestForm').reset();
+        document.getElementById('requestId').value = '';
+        document.getElementById('requestStudentId').disabled = false;
+        document.getElementById('newRequestTitle').textContent = 'Submit New Request';
+        document.getElementById('submitRequestBtn').textContent = 'Submit Request';
+        document.querySelectorAll('#newRequestModal .form-error').forEach(el => {
+            el.classList.remove('visible');
+        });
+    }
+
+    function validateNewRequestForm() {
+        let valid = true;
+        const fullName = document.getElementById('requestFullName').value.trim();
+        const studentId = document.getElementById('requestStudentId').value.trim();
+        const requestType = document.getElementById('requestType').value;
+
+        if (!fullName) {
+            document.getElementById('errorFullName').classList.add('visible');
+            valid = false;
+        } else {
+            document.getElementById('errorFullName').classList.remove('visible');
+        }
+
+        if (!studentId) {
+            document.getElementById('errorStudentId').classList.add('visible');
+            valid = false;
+        } else {
+            document.getElementById('errorStudentId').classList.remove('visible');
+        }
+
+        if (!requestType) {
+            document.getElementById('errorRequestType').classList.add('visible');
+            valid = false;
+        } else {
+            document.getElementById('errorRequestType').classList.remove('visible');
+        }
+
+        return valid;
+    }
+
+    async function clearAllRequests() {
+        localStorage.removeItem('requests');
+        localStorage.setItem('requests', JSON.stringify([]));
+        try {
+            await fetch(`${BACKEND_BASE_URL}/api/requests/reset`, { method: 'POST' });
+        } catch (error) {
+            console.warn('Failed to reset backend requests', error);
+        }
+        populateRequestsTable();
+        updateStatusCounts();
+        updateAnalytics();
+        updateProgressTracker('submitted');
+        updateNewRequestButtonState();
+        console.log('All requests cleared from local storage and backend.');
+    }
+
+    async function submitNewRequest(event) {
+        event.preventDefault();
+        if (!validateNewRequestForm()) {
+            return;
+        }
+
+        const requestId = document.getElementById('requestId').value;
+        const fullName = document.getElementById('requestFullName').value.trim();
+        const studentId = document.getElementById('requestStudentId').value.trim();
+        const requestType = document.getElementById('requestType').value;
+        const photoInput = document.getElementById('requestPhoto');
+        const photo = photoInput.files && photoInput.files[0] ? photoInput.files[0].name : '';
+        const now = new Date();
+        const currentUser = getCurrentUser();
+        const requests = getAllRequests();
+
+        if (requestId) {
+            const request = requests.find(r => r.id === requestId);
+            if (request) {
+                request.studentName = fullName;
+                request.type = requestType;
+                request.lastUpdated = now.toLocaleDateString();
+                if (photo) {
+                    request.photoFilename = photo;
+                }
+                localStorage.setItem('requests', JSON.stringify(requests));
+
+                logActivity('UPDATE_REQUEST', {
+                    requestId: request.id,
+                    studentId: request.studentId,
+                    requestType: request.type,
+                    status: request.status
+                });
+
+                try {
+                    await fetch(`${BACKEND_BASE_URL}/api/requests/${encodeURIComponent(request.id)}`, {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ studentName: request.studentName, type: request.type, photoFilename: request.photoFilename })
+                    });
+                } catch (error) {
+                    console.warn('Failed to sync updated request with backend', error);
+                }
+            }
+        } else {
+            const request = {
+                id: `REQ-${now.getTime()}`,
+                studentId,
+                studentName: fullName,
+                type: requestType,
+                status: 'Submitted',
+                createdAt: now.toISOString(),
+                updatedAt: now.toISOString(),
+                photoFilename: photo,
+                createdBy: currentUser.role === 'admin' ? 'admin' : currentUser.studentId || currentUser.id || studentId
+            };
+            let backendRequest = null;
+            try {
+                backendRequest = await createBackendRequest(request);
+            } catch (error) {
+                setNewRequestBlockMessage(error.message || 'Unable to submit request. Please try again later.');
+                return;
+            }
+
+            if (!backendRequest) {
+                setNewRequestBlockMessage('Unable to submit request. Please try again later.');
+                return;
+            }
+
+            request.id = backendRequest.id;
+            request.status = backendRequest.status;
+            request.createdAt = backendRequest.createdAt;
+            request.updatedAt = backendRequest.updatedAt;
+            requests.unshift(request);
+            localStorage.setItem('requests', JSON.stringify(requests));
+
+            logActivity('CREATE_REQUEST', {
+                requestId: request.id,
+                studentId: request.studentId,
+                requestType: request.type,
+                status: request.status
+            });
+        }
+
+        await fetchRequestStatusSummary();
+        populateRequestsTable();
+        updateAnalytics();
+        closeNewRequestModal();
+    }
+
+    document.getElementById('openNewRequestBtn').addEventListener('click', openNewRequestModal);
+    document.getElementById('closeNewRequestBtn').addEventListener('click', closeNewRequestModal);
+    document.getElementById('cancelNewRequestBtn').addEventListener('click', closeNewRequestModal);
+    document.getElementById('newRequestForm').addEventListener('submit', submitNewRequest);
+
+    // ============================================
+    // SETTINGS PAGE FUNCTIONS
+    // ============================================
+
+    function initializeSettingsPage() {
+        const checkboxes = document.querySelectorAll('#settingsSection input[type="checkbox"]');
+        checkboxes.forEach(checkbox => {
+            const key = checkbox.getAttribute('data-key');
+            const saved = localStorage.getItem(`admin-pref-${key}`);
+            if (saved === '1') {
+                checkbox.checked = true;
+            }
+            
+            checkbox.addEventListener('change', (e) => {
+                const dataKey = e.target.getAttribute('data-key');
+                localStorage.setItem(`admin-pref-${dataKey}`, e.target.checked ? '1' : '0');
+                
+                // Apply dark mode immediately
+                if (dataKey === 'darkMode') {
+                    document.body.classList.toggle('dark-mode', e.target.checked);
+                }
+            });
+        });
+
+        // Load dark mode on page init
+        const darkModeCheckbox = document.getElementById('darkMode');
+        if (darkModeCheckbox && darkModeCheckbox.checked) {
+            document.body.classList.add('dark-mode');
+        }
+    }
+
+    function saveAdminSettings() {
+        const checkboxes = document.querySelectorAll('#settingsSection input[type="checkbox"]');
+        let saved = 0;
+        
+        checkboxes.forEach(checkbox => {
+            const key = checkbox.getAttribute('data-key');
+            localStorage.setItem(`admin-pref-${key}`, checkbox.checked ? '1' : '0');
+            saved++;
+        });
+
+        const timestamp = document.getElementById('lastSavedTimestamp');
+        if (timestamp) {
+            const now = new Date().toLocaleString();
+            timestamp.textContent = `✓ Settings saved at ${now}`;
+            timestamp.style.color = 'var(--accent-green)';
+            
+            setTimeout(() => {
+                timestamp.textContent = 'Preferences saved.';
+                timestamp.style.color = 'var(--muted)';
+            }, 3000);
+        }
+
+        logActivity('SAVE_SETTINGS', { preferencesCount: saved });
+    }
+
+    function viewRequestDetails(requestId) {
+        try {
+            const storedRequests = localStorage.getItem('requests');
+            const allRequests = storedRequests ? JSON.parse(storedRequests) : [];
+            const request = allRequests.find(r => r.id === requestId);
+            
+            if (!request) {
+                alert('Request not found');
+                return;
+            }
+            
+            // Populate modal with request details
+            document.getElementById('detailRequestId').textContent = request.id || '—';
+            document.getElementById('detailStatus').textContent = (request.status || '—').charAt(0).toUpperCase() + (request.status || '—').slice(1);
+            
+            const creds = request.credentials || {};
+            document.getElementById('detailFullName').textContent = creds.fullName || request.fullName || '—';
+            document.getElementById('detailStudentId').textContent = creds.studentId || request.studentId || '—';
+            document.getElementById('detailDepartment').textContent = creds.department || '—';
+            document.getElementById('detailProgram').textContent = creds.program || '—';
+            document.getElementById('detailYearLevel').textContent = creds.yearLevel || '—';
+            document.getElementById('detailReason').textContent = creds.reason || '—';
+            
+            const submittedDate = new Date(request.submittedAt || request.date || '').toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' });
+            document.getElementById('detailSubmittedDate').textContent = submittedDate || '—';
+            
+            // Display uploaded files
+            displayFilePreview('photoPreview', creds.photoFile);
+            displayFilePreview('docPreview', creds.docFile);
+            displayFilePreview('signPreview', creds.signFile);
+            
+            // Show modal
+            document.getElementById('detailsModal').style.display = 'flex';
+        } catch (error) {
+            console.error('Error viewing request details:', error);
+            alert('Error loading request details');
+        }
+    }
+
+    function displayFilePreview(elementId, fileData) {
+        const element = document.getElementById(elementId);
+        
+        if (!fileData || !fileData.data) {
+            element.textContent = '—';
+            return;
+        }
+        
+        // Check if it's an image
+        if (fileData.type && fileData.type.startsWith('image/')) {
+            element.innerHTML = `
+                <div style="display: flex; flex-direction: column; gap: 8px; align-items: center;">
+                    <img src="${fileData.data}" alt="${fileData.name}" />
+                    <a href="${fileData.data}" download="${fileData.name}" class="action-btn" style="font-size: 12px; padding: 6px 12px; color: var(--accent-blue); text-decoration: none; border: 1px solid var(--accent-blue); border-radius: 4px;">
+                        <i class="fa-solid fa-download"></i> Download
+                    </a>
+                </div>
+            `;
+        } else {
+            // For non-image files (PDF, etc), show download link with icon
+            element.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="font-size: 24px;">📄</span>
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
+                        <span style="font-size: 12px; color: var(--muted);">${fileData.name}</span>
+                        <a href="${fileData.data}" download="${fileData.name}" class="action-btn" style="font-size: 12px; padding: 6px 12px; color: var(--accent-blue); text-decoration: none; border: 1px solid var(--accent-blue); border-radius: 4px; width: fit-content;">
+                            <i class="fa-solid fa-download"></i> Download
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
+    }
+
+    function closeDetailsModal() {
+        document.getElementById('detailsModal').style.display = 'none';
+    }
+
+    // Close modal when clicking outside of it
+    window.addEventListener('click', (event) => {
+        const modal = document.getElementById('detailsModal');
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+    </script>
+</body>
+</html>

@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Portal - Login</title>
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(110deg, #0a1a33 0%, #1a2744 100%);
+            --card-bg: #ffffff;
+            --card-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            --text-primary: #000000;
+            --text-secondary: #555;
+            --input-bg: #fafafa;
+            --input-border: #ccc;
+            --input-focus: #1b234b;
+            --btn-bg: #5d6fd2;
+            --btn-hover: #4b5ecc;
+            --link-color: #4b8acb;
+            --error: #dc2626;
+        }
+
+        body.dark-mode {
+            --bg-gradient: linear-gradient(110deg, #0d0d0d 0%, #1a1a1a 100%);
+            --card-bg: #2a2a2a;
+            --card-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            --text-primary: #ffffff;
+            --text-secondary: #d0d0d0;
+            --input-bg: #333333;
+            --input-border: #444444;
+            --input-focus: #5d6fd2;
+            --btn-bg: #5d6fd2;
+            --btn-hover: #4b5ecc;
+            --link-color: #7ba3d4;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Poppins", sans-serif;
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-primary);
+        }
+
+        .admin-container {
+            width: 450px;
+            background: var(--card-bg);
+            padding: 45px;
+            border-radius: 24px;
+            box-shadow: var(--card-shadow);
+            text-align: center;
+        }
+
+        .admin-header {
+            margin-bottom: 30px;
+        }
+
+        .admin-badge {
+            display: inline-block;
+            background: #dc2626;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        .admin-header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .admin-header p {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .security-notice {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 24px;
+            font-size: 13px;
+            color: #7f1d1d;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        body.dark-mode .security-notice {
+            background: #7f1d1d;
+            border-color: #991b1b;
+            color: #fca5a5;
+        }
+
+        .security-notice i {
+            font-size: 16px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 12px;
+            border: 2px solid var(--input-border);
+            background: var(--input-bg);
+            color: var(--text-primary);
+            font-size: 14px;
+            outline: none;
+            transition: 0.3s;
+            font-family: "Poppins", sans-serif;
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            border-color: var(--input-focus);
+            box-shadow: 0 0 8px rgba(93, 111, 210, 0.3);
+        }
+
+        .password-toggle {
+            position: relative;
+        }
+
+        .password-toggle .toggle-btn {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-size: 18px;
+            padding: 4px 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .password-toggle input {
+            padding-right: 45px;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--btn-bg);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        .login-btn:hover {
+            background: var(--btn-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(93, 111, 210, 0.3);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        .success-message,
+        .error-message {
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 16px;
+            font-size: 13px;
+            display: none;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .success-message {
+            background: #e6ffed;
+            border: 1px solid #6ee7b7;
+            color: #065f46;
+        }
+
+        body.dark-mode .success-message {
+            background: #064e3b;
+            border-color: #10b981;
+            color: #d1fae5;
+        }
+
+        .error-message {
+            background: #fee2e2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+        }
+
+        body.dark-mode .error-message {
+            background: #7f1d1d;
+            border-color: #991b1b;
+            color: #fca5a5;
+        }
+
+        .success-message.show,
+        .error-message.show {
+            display: flex;
+        }
+
+        .footer-links {
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid var(--input-border);
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .footer-links a {
+            color: var(--link-color);
+            text-decoration: none;
+            font-weight: 600;
+            margin: 0 4px;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        .divider {
+            margin: 0 6px;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--card-bg);
+            border: 2px solid var(--input-border);
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: 0.3s;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 500px) {
+            .admin-container {
+                width: 90%;
+                padding: 30px 20px;
+                margin: 20px;
+            }
+
+            .admin-header h1 {
+                font-size: 22px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+       <div class="admin-container">
+        <div class="admin-header">
+            <div class="admin-badge">
+                <i class="fa-solid fa-shield"></i> Admin Portal
+            </div>
+            <h1>Administrator Login</h1>
+            <p>Secure access to admin dashboard</p>
+        </div>
+
+        <div class="security-noticef">
+            <i class="fa-solid fa-lock"></i>
+            <span>This is a restricted admin area. Unauthorized access is monitored.</span>
+        </div>
+
+        <div class="success-message" id="successMessage">
+            <i class="fa-solid fa-circle-check"></i>
+            <span id="successText"></span>
+        </div>
+        <div class="error-message" id="errorMessage">
+            <i class="fa-solid fa-exclamation-circle"></i>
+            <span id="errorText"></span>
+        </div>
+
+        <form id="adminLoginForm" onsubmit="adminLogin(event)">
+            <div class="input-group">
+                <label for="adminId">Admin Username</label>
+                <input type="text" id="adminId" placeholder="Enter admin username" required>
+            </div>
+
+            <div class="input-group">
+                <label for="adminPassword">Password</label>
+                <div class="password-toggle">
+                    <input type="password" id="adminPassword" placeholder="Enter password" required>
+                    <button type="button" class="toggle-btn" onclick="togglePasswordVisibility()">
+                        <i class="fa-solid fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="adminKey">
+                    <i class="fa-solid fa-key"></i> Admin Secret Code
+                </label>
+                <input type="password" id="adminKey" placeholder="Enter admin secret code" required>
+            </div>
+
+            <button type="submit" class="login-btn">
+                <i class="fa-solid fa-sign-in-alt"></i> Access Admin Dashboard
+            </button>
+            <div class="footer-links">
+                <p>New admin? <a href="admin-signup.html">Register here</a></p>
+            </div>
+        </form>
+
+    <script>
+        const ADMIN_SECRET_CODE = "ADMIN2026";
+
+        // Load dark mode preference
+        function initDarkMode() {
+            if (localStorage.getItem('pref-darkMode') === '1') {
+                document.body.classList.add('dark-mode');
+            }
+
+            // Ensure admin_users array exists in localStorage
+            if (!localStorage.getItem('admin_users')) {
+                localStorage.setItem('admin_users', JSON.stringify([]));
+            }
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            localStorage.setItem('pref-darkMode', isDarkMode ? '1' : '0');
+        }
+
+        function togglePasswordVisibility() {
+            const input = document.getElementById('adminPassword');
+            const icon = event.target.closest('i');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        const BACKEND_BASE_URL = (() => {
+            if (window.location.protocol === 'file:') return 'http://localhost:3000';
+            if (window.location.hostname === 'localhost' && window.location.port === '3000') return window.location.origin;
+            if (window.location.hostname === '127.0.0.1' && window.location.port === '3000') return window.location.origin;
+            return 'http://localhost:3000';
+        })();
+
+        function getAdminToken() {
+            return localStorage.getItem('adminToken');
+        }
+
+        function getAuthHeaders() {
+            const token = getAdminToken();
+            return {
+                'Content-Type': 'application/json',
+                ...(token ? { Authorization: `Bearer ${token}` } : {})
+            };
+        }
+
+        async function redirectIfAuthenticated() {
+            const token = getAdminToken();
+            if (!token) return;
+
+            try {
+                const response = await fetch(`${BACKEND_BASE_URL}/api/admin/me`, {
+                    headers: getAuthHeaders()
+                });
+                if (response.ok) {
+                    window.location.href = '/admin-dashboard.html';
+                }
+            } catch (error) {
+                console.warn('[Admin Login] Token check failed:', error);
+            }
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMessage');
+            const successText = document.getElementById('successText');
+            successText.textContent = message;
+            successDiv.classList.add('show');
+
+            setTimeout(() => {
+                successDiv.classList.remove('show');
+            }, 5000);
+        }
+
+        function clearMessages() {
+            document.getElementById('errorMessage').classList.remove('show');
+            document.getElementById('successMessage').classList.remove('show');
+        }
+
+        function showError(message) {
+            clearMessages();
+            const errorDiv = document.getElementById('errorMessage');
+            const errorText = document.getElementById('errorText');
+            errorText.textContent = message;
+            errorDiv.classList.add('show');
+
+            setTimeout(() => {
+                errorDiv.classList.remove('show');
+            }, 5000);
+        }
+
+        async function adminLogin(event) {
+            event.preventDefault();
+
+            const adminId = document.getElementById('adminId').value.trim();
+            const adminPassword = document.getElementById('adminPassword').value;
+            const adminKey = document.getElementById('adminKey').value;
+
+            if (!adminKey) {
+                showError('Admin secret code is required.');
+                return;
+            }
+            if (adminKey !== ADMIN_SECRET_CODE) {
+                showError('Invalid admin secret code. Access denied.');
+                console.warn('Failed admin login attempt: Invalid secret code');
+                return;
+            }
+
+            try {
+                // Check against locally stored admin accounts
+                const admins = JSON.parse(localStorage.getItem('admin_users') || '[]');
+                const admin = admins.find(a => a.username === adminId && a.password === adminPassword);
+
+                if (!admin) {
+                    showError('Invalid username or password. Please check your credentials.');
+                    return;
+                }
+
+                // Generate a simple token for local session
+                const token = 'local_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+
+                const user = {
+                    id: adminId,
+                    username: adminId,
+                    role: admin.role || 'admin',
+                    displayName: admin.displayName || adminId,
+                    accountType: 'admin'
+                };
+
+                localStorage.setItem('user', JSON.stringify(user));
+                localStorage.setItem('adminToken', token);
+                localStorage.setItem('adminSession', JSON.stringify({
+                    userId: user.id,
+                    token: token,
+                    loginTime: new Date().toISOString(),
+                    verified: true
+                }));
+
+                showSuccess('✓ Login successful! Redirecting to dashboard...');
+                setTimeout(() => {
+                    window.location.href = 'admin-dashboard.html';
+                }, 1500);
+            } catch (error) {
+                console.error('Login error:', error);
+                showError('❌ Login failed. Please try again.');
+            }
+        }
+
+        // Initialize on page load
+        function parseQueryParams() {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                registered: params.get('registered') === 'true',
+                username: params.get('username') || ''
+            };
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initDarkMode();
+            redirectIfAuthenticated();
+
+            const params = parseQueryParams();
+            if (params.registered) {
+                showSuccess('Registration successful. Please log in with your new account.');
+            }
+            if (params.username) {
+                const userField = document.getElementById('adminId');
+                if (userField) {
+                    userField.value = params.username;
+                    const passwordField = document.getElementById('adminPassword');
+                    if (passwordField) {
+                        passwordField.focus();
+                    }
+                }
+            }
+
+            const adminForm = document.getElementById('adminLoginForm');
+            if (adminForm) {
+                adminForm.addEventListener('submit', adminLogin);
+            }
+        });
+    </script>
+</body>
+</html>
