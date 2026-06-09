@@ -1,0 +1,31 @@
+/* Shared styles for return/utility buttons used across pages */
+:root {
+  /* fallback accent if pages don't define --accent */
+  --common-return-bg: #1e88e5;
+}
+
+.return-dashboard {
+  display: inline-block;
+  margin: 20px auto 0;
+  padding: 12px 20px;
+  background: var(--accent, var(--common-return-bg));
+  color: #fff;
+  border-radius: 10px;
+  text-decoration: none;
+  text-align: center;
+  box-shadow: 0 6px 18px rgba(27, 80, 255, 0.12);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Backwards-compat: small helper to preserve spacing if any page still uses .return-btn */
+.return-btn {
+  display: none;
+}
+
+@media (max-width:768px){
+  .return-dashboard{padding:10px 16px;font-size:13px;margin:15px auto 0}
+}
+
+@media (max-width:600px){
+  .return-dashboard{padding:8px 12px;font-size:12px;width:90%;margin:12px auto 0}
+}
